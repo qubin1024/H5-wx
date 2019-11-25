@@ -242,6 +242,7 @@
       <van-button
         round
         type="info"
+        @click="proview"
         style="background:#ececec;border-color: #ececec; color: #0b206d;"
       >预览活动</van-button>
       <van-button round type="info" style="background:#0b206d;border-color: #0b206d;" @click="save">保存活动</van-button>
@@ -390,17 +391,25 @@ export default {
          this.$notify({ type: 'danger', message: res.msg });
       }
     },
-    async save(){
+    dataFormate(){
       let params = Object.assign({}, this.metaData);
       params.prizeDescription = JSON.stringify(params.prizeDescription);
       params.discount = JSON.stringify(params.discount);
       params.gift = JSON.stringify(params.gift);
       params.thumbnail = JSON.stringify(params.thumbnail);
+      this.setBargainData(params);
+    },
+    proview(){
+      this.dataFormate()
+      this.$router.push({path: 'bargainPro'})
+    },
+    async save(){
+      this.dataFormate();
       this.$toast.loading({
         message: '加载中...',
         duration: 0
       });
-      let {data: res} = await this.$api.common.barginSave(params);
+      let {data: res} = await this.$api.common.barginSave(this.bargainData);
       this.$toast.clear();
       if(res.code === "0000"){
          this.$notify({ type: 'success', message: "保存成功！" });

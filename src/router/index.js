@@ -60,6 +60,11 @@ const routes = [
     component: () => import('../views/bargainDev.vue')
   },
   {
+    path: '/bargainPro',
+    name: 'bargainPro',
+    component: () => import('../views/bargainPro.vue')
+  },
+  {
     path: '/',
     nredirect: '/login'
   }

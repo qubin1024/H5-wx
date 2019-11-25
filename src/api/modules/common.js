@@ -100,3 +100,39 @@ export function barginInfo(params){
     data: requestParam(params)
   })
 }
+
+//获取用户详情
+export function getUserInfo(params){
+  return request({
+    url: requestUrl('api/wxpay/getUserInfo'),
+    method: 'get',
+    params: requestParam(params, 'get')
+  })
+}
+
+//根据url获取wxinfo
+export function initwxjs(params){
+  return request({
+    url: requestUrl('api/wxpay/initwxjs?url=' + params.url),
+    method: 'post',
+    data: {}
+  })
+}
+
+//getOrderByOrderId
+export function getOrderByOrderId(params){
+  return request({
+    url: requestUrl('api/order/getOrderByOrderId'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//bargin/queryBarginLog
+export function queryBarginLog(params){
+  return request({
+    url: requestUrl('bargin/queryBarginLog'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
