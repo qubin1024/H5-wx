@@ -96,7 +96,7 @@
         </span> 
       </div> -->
       <div class="x-area" style="margin: 10px 0;">
-        <van-uploader class="round"  v-model="metaData.thumbnail" @delete="imgDelete('thumbnail')" :max-count="1" :after-read="afterRead" @click="clickItem('thumbnail')"/>
+        <van-uploader class="round"  v-model="metaData.thumbnail" @delete="imgDelete('thumbnail')" :max-count="1" :after-read="afterRead" @click.native="clickItem('thumbnail')"/>
         <div style="width: 200px;">
           <van-field
             class="c-textarea"
@@ -133,9 +133,11 @@
       <div class="title-23">
         <span style="color: #10aeff;background: #fff;padding: 0 10px;">选择位置</span>
       </div>
-      <div class="location">
+      <div class="location" @click="choosePosition">
         <van-icon name="location" />选择主办方地址
       </div>
+      <span style="display: block;font-size: 0.3rem;color: #843493;padding: 0 15px;">{{metaData.address}}</span>
+        <div id="container" style="height: 5rem"></div>
       <div class="x-title" style="text-align: center;">提示：不选择则不显示</div>
     </content-wrap>
     <content-wrap title="信息收集设置">
@@ -154,7 +156,7 @@
       </div>
       <div class="x-area">
         <span class="label-item">
-          <van-field class="v-input" v-model="metaData.question1" placeholder="信息项名称" style="width: 3rem;" />
+          <van-field class="v-input" v-model="metaData.question1" placeholder="信息项名称" disabled style="width: 3rem;" />
         </span>
         <span class="label-item">
           <!-- <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" /> -->
@@ -163,7 +165,7 @@
       </div>
       <div class="x-area">
         <span class="label-item">
-          <van-field class="v-input" v-model="metaData.question2" placeholder="信息项名称" style="width: 3rem;" />
+          <van-field class="v-input" v-model="metaData.question2" placeholder="信息项名称" disabled style="width: 3rem;" />
         </span>
         <span class="label-item">
           <!-- <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" /> -->
@@ -285,6 +287,7 @@ export default {
         thumbnail: [], //机构图片
         discount: [],
         updateUser: "",
+        createUser: "",
         createTime: "", //创建时间
         updateTime: "",
         qrImg: "", //二维码
@@ -299,8 +302,8 @@ export default {
         bgImage: "",
         prizeNum: "",
         phone: "",
-        question1: "",
-        question2: "",
+        question1: "姓名",
+        question2: "电话",
         question3: "",
         question4: "",
         question5: "",
@@ -318,6 +321,7 @@ export default {
   },
   computed: {
     ...mapGetters("common", {
+      userInfo: 'userInfo',
       bargainData: "bargainData"
     })
     // metaData: {
@@ -339,7 +343,19 @@ export default {
     }
   },
   mounted() {
+    if(this.$route.query.userVuex && this.bargainData != null){
+        let params = Object.assign({}, this.bargainData);
+        params.prizeDescription = JSON.parse(params.prizeDescription);
+        params.discount = JSON.parse(params.discount);
+        params.gift = JSON.parse(params.gift);
+        params.thumbnail = JSON.parse(params.thumbnail);
+        this.metaData = params;
+        this.mapInit();
+        return;
+    }
+
     if (!this.$route.query.id) {
+      this.mapInit();
       return;
     }
     this.getInfo(this.$route.query.id)
@@ -348,6 +364,73 @@ export default {
     ...mapMutations("common", {
       setBargainData: "setBargainData"
     }),
+    mapInit() {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          var self = this;
+          var map = new qq.maps.Map(document.getElementById("container"), {
+            center: new qq.maps.LatLng(
+              position.coords.latitude,
+              position.coords.longitude
+            ),
+            zoom: 13
+          });
+          var geocoder = new qq.maps.Geocoder({
+            complete: function(result) {
+              map.setCenter(result.detail.location);
+              self.metaData.address = result.detail.address;
+            }
+          });
+          if (self.metaData.latitude != "" && self.metaData.longitude != "") {
+            var marker = new qq.maps.Marker({
+              position: new qq.maps.LatLng(
+                parseFloat(self.metaData.latitude),
+                parseFloat(self.metaData.longitude)
+              ),
+              map: map
+            });
+            geocoder.getAddress(
+              new qq.maps.LatLng(
+                parseFloat(self.metaData.latitude),
+                parseFloat(self.metaData.longitude)
+              )
+            );
+          }
+          qq.maps.event.addListener(map, "click", function(event) {
+            var lat = parseFloat(event.latLng.lat);
+            var lng = parseFloat(event.latLng.lng);
+            self.metaData.latitude = lat;
+            self.metaData.longitude = lng;
+            var latLng = new qq.maps.LatLng(lat, lng);
+            //调用获取位置方法
+            geocoder.getAddress(latLng);
+            var marker = new qq.maps.Marker({
+              position: event.latLng,
+              map: map
+            });
+            qq.maps.event.addListener(map, "click", function(event) {
+              marker.setMap(null);
+            });
+          });
+        },
+        error => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              alert("您拒绝对获取地理位置的请求");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              alert("位置信息是不可用的");
+              break;
+            case error.TIMEOUT:
+              alert("请求您的地理位置超时");
+              break;
+            case error.UNKNOWN_ERROR:
+              alert("未知错误");
+              break;
+          }
+        }
+      );
+    },
     imgDelete(key){
         this.metaData[key] = [];
     },
@@ -358,7 +441,7 @@ export default {
         this.upload(file.file)
     },
     async upload(file) {
-        let form = new FormData();
+        let form = new metaDataata();
         form.append("upfile ", file);
         let config = {
             headers: { "Content-Type": "multipart/form-data" }
@@ -380,6 +463,7 @@ export default {
         id: id
       });
       this.$toast.clear();
+      this.mapInit();
       if(res.code === "0000"){
         let params = res.result.bargin;
         params.prizeDescription = JSON.parse(params.prizeDescription);
@@ -397,6 +481,7 @@ export default {
       params.discount = JSON.stringify(params.discount);
       params.gift = JSON.stringify(params.gift);
       params.thumbnail = JSON.stringify(params.thumbnail);
+      params.createUser = this.userInfo.userId;
       this.setBargainData(params);
     },
     proview(){
@@ -416,6 +501,33 @@ export default {
       }else {
          this.$notify({ type: 'danger', message: res.msg });
       }
+    },
+    async choosePosition(){
+      let currentUrl = encodeURIComponent(location.href.split("#")[0]);
+      let { data: jsRes } = await this.$api.common.initwxjs({
+        url: currentUrl
+      });
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: jsRes.result.data.appId, // 必填，公众号的唯一标识
+        timestamp: jsRes.result.data.timestamp, // 必填，生成签名的时间戳
+        nonceStr: jsRes.result.data.nonceStr, // 必填，生成签名的随机串
+        signature: jsRes.result.data.signature, // 必填，签名s
+        jsApiList: [
+          "openLocation"
+        ] // 必填，需要使用的JS接口列表
+      });
+      wx.ready(() => {
+        wx.openLocation({
+          latitude: '',
+          longitude: '',
+          success(res){
+            this.metaData.latitude = res.latitude;
+            this.metaData.longitude = res.longitude;
+            this.metaData.address = res.address;
+          }
+        })
+      })
     }
   },
   components: {

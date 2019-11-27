@@ -4,9 +4,161 @@
     <user-center></user-center>
     <special></special>
     <img src="@/assets/img/bargain-head.jpeg" width="100%" />
-    <title-active v-model="metaData.activityName"></title-active>
-    <order-soft></order-soft>
-    <div class="footer">
+    <div class="activity-name">{{metaData.activityName}}</div>
+    <content-wrap v-if="!!metaData.startTime && metaData.endTime">
+      <count-down class="time-wrap" :startTime="metaData.startTime" :endTime="metaData.endTime"></count-down>
+    </content-wrap>
+    <content-wrap>
+      <dd class="barline" v-if="prize != null">
+        <div
+          w="50"
+          :style="{
+                            'width': parseFloat((metaData.originalPrice-prize) / (metaData.originalPrice - metaData.floorPrice)) * 100 + '%'
+                        }"
+          class="charts"
+        >
+          <img src="../assets/img/yuan.png" />
+          <div class="price">
+            ¥{{prize}}
+            <i></i>
+          </div>
+        </div>
+      </dd>
+      <div class="x-area">
+        <span class="label-item">
+          原价：
+          <span style="color: red;">{{metaData.originalPrice}}元</span>
+        </span>
+        <span class="label-item">
+          底价：
+          <span style="color: red;">{{metaData.floorPrice}}元</span>
+        </span>
+      </div>
+      <div v-if="!!this.shareId" class="btn animate">帮忙砍价</div>
+      <div v-if="!this.shareId" @click="openDialog" class="btn animate">参加活动</div>
+      <div v-if="!!shareId && b_userId != user_id" @click="linkreload" class="btn animate">参加活动</div>
+      <div v-if="!!this.shareId && b_userId == user_id" class="btn animate">支付</div>
+      <ul class="wrap-wx" v-if="barginLogList.length">
+        <li v-for="(item, index) in barginLogList" :key="index">
+          <img :src="item.headimgurl" />
+          <div>
+            <p>{{item.username | filterusername(item.username)}}</p>
+            <p>{{item.create_time.split(' ')[0]}}</p>
+          </div>
+          <span>
+            帮砍
+            <span style="color: red;">{{parseInt(item.bargin_price)}}</span>
+          </span>
+        </li>
+      </ul>
+    </content-wrap>
+
+    <content-wrap title="奖品描述">
+      <div style="text-align: center;margin: 0.4rem;">
+        本期奖品
+        <span style="color: red;">{{metaData.prizeNum}} 份</span>， 剩余
+        <span style="color: red;">{{metaData.prizeLeft}} 份</span>
+      </div>
+      <div style="text-align: center;margin: 0.4rem;">
+        <span style="color: red;">{{metaData.giftName}} 商品</span>，原价
+        <span style="color: red;">{{metaData.originalPrice}}元</span>活动亏本卖， 最低降到
+        <span style="color: red;">{{metaData.floorPrice}}元</span>，数量有限，售完即止。
+      </div>
+
+      <div v-if="!!metaData.prizeDescription  && metaData.prizeDescription.length">
+        <div v-for="item in metaData.prizeDescription" :key="item.key" style="line-height: 0.4rem;">
+          <img
+            v-if="item.type == 'img' && !!item.imgUrl.length"
+            :src="item.imgUrl[0].url"
+            style=" width: 100%;display: block;"
+          />
+          <pre
+            v-if="item.type == 'text'"
+            style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
+          >{{item.text}}</pre>
+          <video
+            v-if="item.type == 'media'"
+            :src="item.link"
+            ontrols="controls"
+            preload="meta"
+            width="100%"
+            height="240"
+            x-webkit-airplay="true"
+            webkit-playsinline="true"
+            playsinline="true"
+            x5-video-player-fullscreen="true"
+            x5-video-player-type="h5"
+            controls
+          ></video>
+        </div>
+      </div>
+    </content-wrap>
+
+    <content-wrap title="活动规则" v-if="!!metaData.activityRule">
+      <pre
+        style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
+      >{{metaData.activityRule}}</pre>
+    </content-wrap>
+
+    <content-wrap title="领奖信息" v-if="!!metaData.prizeInfo">
+      <pre
+        style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
+      >{{metaData.prizeInfo}}</pre>
+    </content-wrap>
+
+    <content-wrap title="机构介绍" v-if="!!metaData.companyDescription">
+      <pre
+        style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
+      >{{metaData.companyDescription}}</pre>
+    </content-wrap>
+
+    <content-wrap title="主办方名片">
+      <div style="margin: 1rem auto;height: 3rem;width:3rem;position: relative;">
+        <img
+          :src="metaData.thumbnail[0].url"
+          v-if="metaData.thumbnail.length"
+          style="width: 100%;height: 100%;"
+        />
+      </div>
+      <div class="title-23">
+        <span style="color: #10aeff;background: #fff;padding: 0 10px;">咨询电话</span>
+      </div>
+      <span
+        style="
+                    text-align: center;
+                    width: 100%;
+                    display: inline-block;
+                    color: red;
+                    font-weight: bold;
+                "
+      >{{metaData.phone}}</span>
+      <div class="title-23">
+        <span style="color: #10aeff;background: #fff;padding: 0 10px;">坐标位置</span>
+      </div>
+      <span
+        style="display: block;font-size: 0.3rem;color: #ccc;padding: 0 15px;text-align: center;"
+      >（点击下方位置，直接导航）</span>
+      <br />
+      <span
+        style="display: block;font-size: 0.5rem;color: #843493;padding: 0 15px;text-align: center;"
+        @click="initQQMap"
+      >
+        <van-icon name="location" />
+        {{metaData.address}}
+      </span>
+    </content-wrap>
+    <content-wrap title="店内优惠" v-if="!!metaData.discount.length">
+      <div>
+        <div v-for="item in metaData.discount" :key="item.key" style="line-height: 0.4rem;">
+          <pre
+            v-if="item.type == 'uploadText'"
+            style="white-space: pre-line;font-size: 0.8rem;padding: 0.2rem 0;overflow-wrap: break-word;line-height: 1.2rem;display: inline-block;font-weight: bold;color: #f76800;text-align: center;width: 100%;"
+          >{{item.text}}</pre>
+        </div>
+      </div>
+    </content-wrap>
+    <order-soft :list="orderList" :floorPrice="metaData.floorPrice"></order-soft>
+    <div class="footer" v-if="!urlParams.id">
       <van-button
         round
         type="info"
@@ -20,6 +172,65 @@
         @click="save"
       >保存活动</van-button>
     </div>
+    <div class="phone">
+      <a
+        :href="'tel:' + metaData.phone"
+        style="font-size: 0.4rem; width: 1rem;
+        color: #7eceef;
+        font-weight: bold;margin: 0.1rem;
+        line-height: 0.4rem;"
+      >联系商家</a>
+    </div>
+    <van-dialog
+      v-model="show"
+      title="报名信息"
+      @close="dialogClose"
+      @confirm="dialogConfirm"
+      show-cancel-button
+    >
+      <van-cell-group>
+        <van-field
+          v-model="dialogInfo.user_name"
+          required
+          clearable
+          v-if="metaData.question1"
+          :label="metaData.question1"
+          :placeholder="`请输入${metaData.question1}`"
+        />
+        <van-field
+          v-model="dialogInfo.mobile"
+          required
+          clearable
+          v-if="metaData.question2"
+          :label="metaData.question2"
+          :placeholder="`请输入${metaData.question2}`"
+        />
+        <van-field
+          v-model="dialogInfo.question3"
+          required
+          clearable
+          v-if="metaData.question3"
+          :label="metaData.question3"
+          :placeholder="`请输入${metaData.question3}`"
+        />
+        <van-field
+          v-model="dialogInfo.question4"
+          required
+          clearable
+          v-if="metaData.question4"
+          :label="metaData.question4"
+          :placeholder="`请输入${metaData.question4}`"
+        />
+        <van-field
+          v-model="dialogInfo.question5"
+          required
+          clearable
+          v-if="metaData.question5"
+          :label="metaData.question5"
+          :placeholder="`请输入${metaData.question5}`"
+        />
+      </van-cell-group>
+    </van-dialog>
   </div>
 </template>
 <script>
@@ -34,6 +245,7 @@ import TitleActive from "../components/titleActive";
 import ThemeActivity from "../components/theme";
 import Special from "../components/special";
 import CreateTime from "../components/time";
+import CountDown from "../components/count-down";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "bargain-pro",
@@ -80,11 +292,24 @@ export default {
         barginNum: "", //砍价次数
         address: ""
       },
+      urlParams: {
+        id: null
+      },
+      dialogInfo: {
+        name: "",
+        mobile: "",
+        question3: "",
+        question4: "",
+        question5: ""
+      },
+      orderList: [],
       user_id: "",
-      userName: "",
-      shareId: "",
-      prize: "",
       b_userId: "",
+      userName: "",
+      name: "",
+      shareId: "",
+      prize: null,
+      show: false,
       barginLogList: []
     };
   },
@@ -105,33 +330,155 @@ export default {
       deep: true
     }
   },
+  filters: {
+    filterusername(userName) {
+      if (typeof userName == "string") {
+        return userName.replace(
+          /^(.{1})(?:[\u4e00-\u9fa5, \w]+)(.{1})$/,
+          "$1*$2"
+        );
+      } else {
+        return userName;
+      }
+    }
+  },
   mounted() {
     this.init();
     if (!!this.$route.query.shareId) {
-      this.$api.common
-        .getOrderByOrderId({
-          orderId: this.$route.query.shareId
-        })
-        .then(({ data: res }) => {
-          if (data.code == "0000") {
-            this.prize = data.result.data.total_price;
-            this.b_userId = data.result.data.user_id;
-          }
-        });
-      this.$api.common
-        .queryBarginLog({
-          orderId: params.shareId
-        })
-        .then(({ data }) => {
-          if (data.code == "0000") {
-            this.barginLogList = data.result.data;
-          }
-        });
+      this.getOrderByOrderId(this.$route.query.shareId);
+      this.queryBarginLog(this.$route.query.shareId);
     }
   },
   methods: {
+    async getOrderByOrderId(shareId) {
+      let { data: res } = await this.$api.common.getOrderByOrderId({
+        orderId: shareId
+      });
+      if (res.code == "0000") {
+        this.prize = parseInt(res.result.data.total_price);
+        this.b_userId = res.result.data.user_id;
+      }
+    },
+    async queryBarginLog(shareId) {
+      let { data: barginLog } = await this.$api.common.queryBarginLog({
+        orderId: shareId
+      });
+      if (barginLog.code == "0000") {
+        this.barginLogList = barginLog.result.data;
+      }
+    },
+    async addZan() {
+      if (!this.shareId) {
+        // 显示文字
+        return this.$toast("请参加活动！");
+      }
+
+      let { data: res } = await this.$api.common.bargin({
+        activityId: this.urlParams.id,
+        orderId: this.shareId,
+        total_price: this.prize,
+        user_id: this.user_id
+      });
+      if (res.code == 0) {
+        this.$toast(`恭喜你成功砍价${res.result.data.total_price}元`);
+        his.getOrderByOrderId(this.shareId);
+        this.queryBarginLog(this.shareId);
+      } else {
+        this.$toast(res.msg);
+      }
+    },
+    dialogClose() {
+      this.dialogInfo = {
+        user_name: "",
+        mobile: "",
+        question3: "",
+        question4: "",
+        question5: ""
+      };
+    },
+    async dialogConfirm() {
+      if (!this.dialogInfo.user_name || !this.dialogInfo.mobile) {
+        // 显示文字
+        return this.$notify({ type: "danger", message: "请填写姓名，电话!" });
+      }
+
+      let { data: res } = await this.$api.common.saveOrder(
+        Object.assign(
+          {},
+          {
+            activityId: this.urlParams.id,
+            from_user: "",
+            red_packets: "",
+            total_price: this.metaData.originalPrice,
+            user_name: "",
+            orderType: "3",
+            user_type: "",
+            mobile: "",
+            user_id: this.user_id,
+            question3: "",
+            question4: "",
+            question5: ""
+          },
+          this.dialogInfo
+        )
+      );
+      if (res.code == "0000") {
+        this.$toast("参加成功！分享好友帮砍价，赢礼品。");
+        this.shareId = res.result.order.orderId;
+        wx.ready(() => {
+          var shareParam = {
+            title: `我是${this.dialogInfo.user_name || this.userName}, 参加了${
+              this.metaData.activityName
+            }`, // 分享标题
+            desc: `${this.metaData.activityName}, 联系电话: ${this.dialogInfo.mobile}`, // 分享描述
+            link:
+            location.origin + 
+              "/statics/dist/redirect.html?id=" +
+              this.urlParams.id +
+              "&userid=" +
+              this.user_id +
+              "&shareId=" +
+              this.shareId +
+              "&hash=bargainPro", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: this.metaData.thumbnail, // 分享图标
+            // type: 'link', // 分享类型,music、video或link，不填默认为link
+            // dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            trigger: function(res) {
+              console.log("用户点击发送给朋友");
+            },
+            success: function(res) {
+              console.log("已分享");
+            },
+            cancel: function(res) {
+              console.log("已取消");
+            },
+            fail: function(res) {}
+          };
+          wx.onMenuShareTimeline(shareParam);
+          wx.onMenuShareAppMessage(shareParam);
+          this.show = false;
+        });
+        this.getOrderByOrderId(res.result.order.orderId);
+        this.queryBarginLog(this.shareId);
+      } else {
+        this.$toast("res.msg");
+      }
+    },
+    linkPay() {
+      if (!this.shareId || !this.prize) {
+        return this.$toast("订单不存在或者金额异常");
+      }
+      location.href = location.origin + 
+        "/statics/dist/pay.html?user_id=" +
+        this.b_userId +
+        "&total_fee=" +
+        this.prize +
+        "&orderId=" +
+        this.shareId;
+    },
     async init() {
       let params = this.$route.query;
+      this.urlParams = params;
       if (!params.id) {
         let params = Object.assign({}, this.bargainData);
         params.prizeDescription = JSON.parse(params.prizeDescription);
@@ -148,7 +495,7 @@ export default {
         this.shown = !!params.shown ? true : false;
       }
       if (!!params.code) {
-        let { data: res } = this.$api.common.getUserInfo({
+        let { data: res } = await this.$api.common.getUserInfo({
           code: params.code,
           state: params.state
         });
@@ -161,8 +508,9 @@ export default {
           type: "info",
           id: params.id
         });
-        if (infoRes === "0000") {
+        if (infoRes.code === "0000") {
           let params = infoRes.result.bargin;
+          this.orderList = infoRes.result.order;
           params.prizeDescription = JSON.parse(params.prizeDescription);
           params.discount = JSON.parse(params.discount);
           params.gift = JSON.parse(params.gift);
@@ -207,7 +555,7 @@ export default {
             var shareParam = {
               title: `我是${this.userName}, 参加了${this.metaData.activityName}`, // 分享标题
               desc: `${this.metaData.activityName}, 联系电话: ${this.metaData.phone}`, // 分享描述
-              link:
+              link: location.origin + 
                 "/statics/dist/redirect.html?id=" +
                 this.metaData +
                 "&userid=" +
@@ -235,8 +583,40 @@ export default {
         }
       }
     },
+    openDialog() {
+      this.show = true;
+    },
     goback() {
-      this.$router.back(-1);
+      this.$router.push({ path: "bargainDev", query: { userVuex: true } });
+    },
+    //被分享者参加活动
+    linkreload() {
+      location.href =
+        location.origin +
+        "statics/dist/redirect.html" +
+        "?id=" +
+        this.urlParams.id +
+        "&hash=bargainPro&shown=1";
+    },
+    //地图初始化
+    initQQMap() {
+      console.log({
+        latitude: this.metaData.latitude, // 纬度，浮点数，范围为90 ~ -90
+        longitude: this.metaData.longitude, // 经度，浮点数，范围为180 ~ -180。
+        name: "活动地点", // 位置名
+        address: this.metaData.address, // 地址详情说明
+        scale: 10 // 地图缩放级别,整形值,范围从1~28。默认为最大
+      });
+      wx.ready(() => {
+        wx.openLocation({
+          latitude: this.metaData.latitude, // 纬度，浮点数，范围为90 ~ -90
+          longitude: this.metaData.longitude, // 经度，浮点数，范围为180 ~ -180。
+          name: "活动地点", // 位置名
+          address: this.metaData.address, // 地址详情说明
+          scale: 10, // 地图缩放级别,整形值,范围从1~28。默认为最大
+          infoUrl: `http://apis.map.qq.com/uri/v1/marker?marker=coord:${this.metaData.latitude},${this.metaData.longitude};title:活动地点;addr:${this.metaData.address}` // 在查看位置界面底部显示的超链接,可点击跳转
+        });
+      });
     },
     async save() {
       this.$toast.loading({
@@ -264,7 +644,8 @@ export default {
     TitleActive,
     ThemeActivity,
     Special,
-    CreateTime
+    CreateTime,
+    CountDown
   }
 };
 </script>
@@ -288,64 +669,16 @@ export default {
     width: 150px;
   }
 }
-.upload-div {
-  width: 375px;
-  height: 174px;
-  background: #ccc;
-}
-/deep/ .center.van-uploader {
-  position: relative;
-  left: 50%;
-  transform: translateX(-51px);
-}
-/deep/ .round .van-uploader__upload {
-  border-radius: 50%;
-}
-.v-input {
-  display: inline-block;
-  width: 70px;
-  border: 1px dashed #0d1a31;
-  border-radius: 5px;
-  /deep/ .van-field__control {
-    color: red;
-  }
-}
-.upload {
-  width: 100px;
-  height: 100px;
-  border-radius: 20px;
-  border: 1px dashed #0d1a31;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #0d1a31;
-}
-.label-item {
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-.x-area {
-  display: flex;
-  justify-content: space-between;
-  margin: 30px 0 10px 0;
-}
-.x-title {
-  font-size: 14px;
-  color: #696969;
-}
-.title-23 {
-  border: 1px solid #ccc;
+
+.activity-name {
   text-align: center;
-  height: 0;
-  font-size: 0.4rem;
-  line-height: 0rem;
-  width: 60%;
-  left: 20%;
-  position: relative;
-  margin: 0.5rem 0;
+  color: #fff;
+  font-size: 24px;
+  line-height: 30px;
+  padding: 5px 20px;
+  margin: 10px 0;
 }
+
 .c-textarea {
   border: 1px dashed #0d1a31;
   padding: 10px 15px;
@@ -360,6 +693,129 @@ export default {
   color: #fff;
   text-align: center;
   line-height: 1rem;
+}
+dd.barline {
+  width: 100%;
+  background: #fce877;
+  height: 0.25rem;
+  display: inline-block;
+  border-radius: 0.15rem;
+  position: relative;
+  margin-left: 0;
+}
+.barline img {
+  width: 0.5rem;
+  margin-top: -0.11rem;
+  margin-right: -0.1rem;
+}
+.barline .price {
+  position: absolute;
+  right: -0.5rem;
+  background: #ff5041;
+  padding: 0.1rem 0.15rem;
+  border-radius: 0.1rem;
+  top: -0.65rem;
+}
+.barline .price i {
+  top: 0.35rem;
+  right: 0.45rem;
+  width: 0;
+  height: 0;
+  border-left: 0.2rem solid transparent;
+  border-right: 0.2rem solid transparent;
+  border-top: 0.2rem solid #ff5041;
+  position: absolute;
+}
+dd.barline div.charts {
+  height: 0.25rem;
+  position: relative;
+  color: #fff;
+  line-height: 0.25rem;
+  text-indent: 0.05rem;
+  background: #eb0000;
+  border-radius: 0.15rem;
+  text-align: right;
+  font-size: 0.24rem;
+}
+.x-area {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0 10px 0;
+}
+.btn {
+  border: 0.05333rem solid #ccc;
+  background: red;
+  text-align: center;
+  height: 1.2rem;
+  line-height: 1.2rem;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 0.6rem;
+  margin: 0.2rem 1rem;
+}
+.title-23 {
+  border: 1px solid #ccc;
+  text-align: center;
+  height: 0;
+  font-size: 0.4rem;
+  line-height: 0rem;
+  width: 60%;
+  left: 20%;
+  position: relative;
+  margin: 0.5rem 0;
+}
+.wrap-wx {
+  padding: 0.2rem;
+  border-top: 1px dashed #ccc;
+}
+.wrap-wx li {
+  display: flex;
+  height: 2rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.wrap-wx img {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+}
+.wrap-wx span {
+  width: 4rem;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wrap-wx p {
+  font-size: 0.2rem;
+  color: #000;
+}
+.animate {
+  animation: myfirst 0.5s ease-in-out infinite alternate running;
+}
+@keyframes myfirst {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+.phone {
+  height: 1rem;
+  width: 2rem;
+  position: fixed;
+  bottom: 5rem;
+  right: 0;
+  border: 1px solid #ccc;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-right: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 0.1rem;
 }
 </style>
 

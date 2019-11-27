@@ -16,7 +16,7 @@
                     <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{item.username | filterusername(item.username)}}</div>
                 </td>
                 <td>
-                    <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{item.total_price == formD.floorPrice ? "已经降至底价": item.total_price}}</div>
+                    <div style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{item.total_price == floorPrice ? "已经降至底价": item.total_price}}</div>
                 </td>
             </tr>
         </tbody>
@@ -32,8 +32,30 @@ export default {
   },
   data() {
     return {
-      list: []
     };
+  },
+  filters: {
+    filterusername(userName) {
+      if (typeof userName == "string") {
+        return userName.replace(
+          /^(.{1})(?:[\u4e00-\u9fa5, \w]+)(.{1})$/,
+          "$1*$2"
+        );
+      } else {
+        return userName;
+      }
+    }
+  },
+  props: {
+    list: {
+      type: Array,
+      default: function(){
+        return []
+      }
+    },
+    floorPrice: {
+      type: Number
+    }
   }
 };
 </script>

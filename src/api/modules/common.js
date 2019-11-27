@@ -128,10 +128,28 @@ export function getOrderByOrderId(params){
   })
 }
 
-//bargin/queryBarginLog
+//保存活动
+export function saveOrder(params){
+  return request({
+    url: requestUrl('api/order/saveOrder'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//查询砍价信息
 export function queryBarginLog(params){
   return request({
     url: requestUrl('bargin/queryBarginLog'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//砍价
+export function bargin(params){
+  return request({
+    url: requestUrl('bargin/bargin'),
     method: 'post',
     data: requestParam(params)
   })

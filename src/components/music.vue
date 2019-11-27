@@ -1,7 +1,7 @@
 <template>
     <div>
         <van-icon name="music" :class="{'play': play}" @click="changeOn" />
-        <!-- <audio src="https://webfs.yun.kugou.com/201910311526/7ce4ca0b64612d4bf9f472aa07171134/G056/M03/0F/07/GJQEAFbaReSADpJMAFcJFYoniCs294.mp3" preload controls hidden ref="music"></audio> -->
+        <audio src="https://nx01-sycdn.kuwo.cn/e0e7268b8fdf56bd76b3e757ae97f093/5ddea6f3/resource/n3/61/79/4114899473.mp3" preload controls hidden ref="music"></audio>
     </div>
 </template>
 <script>
@@ -13,15 +13,15 @@ export default {
     };
   },
   mounted() {
-    // 自动播放音乐效果，解决微信自动播放问题
-    // document.addEventListener("touchstart", this.audioAutoPlay, false);
-    // document.addEventListener("WeixinJSBridgeReady", this.audioAutoPlay, false);
-    // let oAudio = this.$refs["music"];
-    // oAudio.onended = function() {
-    //   //播放完毕，重新循环播放
-    //   oAudio.load();
-    //   oAudio.play();
-    // };
+    //自动播放音乐效果，解决微信自动播放问题
+    document.addEventListener("touchstart", this.audioAutoPlay, false);
+    document.addEventListener("WeixinJSBridgeReady", this.audioAutoPlay, false);
+    let oAudio = this.$refs["music"];
+    oAudio.onended = function() {
+      //播放完毕，重新循环播放
+      oAudio.load();
+      oAudio.play();
+    };
   },
   methods: {
     changeOn() {

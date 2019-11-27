@@ -20,8 +20,13 @@ new Vue({
   mounted() {
     let hash = getQueryString('hash');
     this.setCode(getQueryString('code'))
+    let params = {};
+    decodeURIComponent(location.search).split("?")[1].split('&').forEach((e) => {	
+      let key = e.split('=')[0]	
+      params[key] = e.split('=')[1]	
+    })	
     if(hash != null){
-      this.$router.push({path: hash})
+      this.$router.push({path: hash, query: params})
     }
   },
   methods: {

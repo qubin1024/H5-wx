@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
+    <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=P4FBZ-QO5WF-CI2J5-JYZUJ-CM4T2-XAFGE"></script>
     <title>商家恋</title>
   </head>
   <body>
@@ -13,5 +14,10 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script>
+      var script = document.createElement('script');
+      script.src = "https://res.wx.qq.com/open/js/jweixin-1.2.0.js";
+      document.body.appendChild(script);  
+    </script>
   </body>
 </html>
