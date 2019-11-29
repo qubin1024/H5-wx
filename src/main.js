@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import * as Vant from 'vant';
 import 'vant/lib/index.css';
+import '@/assets/animate.css';
 import 'amfe-flexible/index.js';
 import Api from './api/index.js';
 import {getQueryString} from "@/util";

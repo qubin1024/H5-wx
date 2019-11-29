@@ -3,6 +3,12 @@
     <music></music>
     <user-center></user-center>
     <special></special>
+        <div class="user-info">
+          <span> <van-icon name="like" />12 </span>
+          <span> <van-icon name="eye" />12 </span>
+          <span> <van-icon name="friends" />12 </span>
+          <span> <van-icon name="chat-o" />写评论 </span>
+        </div>
     <img src="@/assets/img/bargain-head.jpeg" width="100%" />
     <div class="activity-name">{{metaData.activityName}}</div>
     <content-wrap v-if="!!metaData.startTime && metaData.endTime">
@@ -34,10 +40,10 @@
           <span style="color: red;">{{metaData.floorPrice}}元</span>
         </span>
       </div>
-      <div v-if="!!this.shareId" class="btn animate">帮忙砍价</div>
+      <div v-if="!!this.shareId" @click="addZan" class="btn animate">帮忙砍价</div>
       <div v-if="!this.shareId" @click="openDialog" class="btn animate">参加活动</div>
       <div v-if="!!shareId && b_userId != user_id" @click="linkreload" class="btn animate">参加活动</div>
-      <div v-if="!!this.shareId && b_userId == user_id" class="btn animate">支付</div>
+      <div v-if="!!this.shareId && b_userId == user_id && metaData.floorPrice == prize" class="btn animate">支付</div>
       <ul class="wrap-wx" v-if="barginLogList.length">
         <li v-for="(item, index) in barginLogList" :key="index">
           <img :src="item.headimgurl" />
@@ -379,9 +385,9 @@ export default {
         total_price: this.prize,
         user_id: this.user_id
       });
-      if (res.code == 0) {
+      if (res.code == "0000") {
         this.$toast(`恭喜你成功砍价${res.result.data.total_price}元`);
-        his.getOrderByOrderId(this.shareId);
+        this.getOrderByOrderId(this.shareId);
         this.queryBarginLog(this.shareId);
       } else {
         this.$toast(res.msg);
@@ -676,6 +682,7 @@ export default {
   font-size: 24px;
   line-height: 30px;
   padding: 5px 20px;
+  font-weight: bold;
   margin: 10px 0;
 }
 
@@ -816,6 +823,23 @@ dd.barline div.charts {
   justify-content: space-around;
   align-items: center;
   padding: 0 0.1rem;
+}
+.user-info{
+   position: fixed;
+    right: 0.26667rem;
+    bottom: 1.6rem;
+    min-width: 2rem;
+    height: 1rem;
+    background: #000000a6;
+    z-index: 997;
+    border-radius: 0.13333rem;
+    color: #fff;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    width: 5rem;
+    justify-content: space-around;
 }
 </style>
 
