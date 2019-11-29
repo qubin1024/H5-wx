@@ -1,7 +1,6 @@
 .DS_Store
 *.project
 *.rar
-node_modules/
 dist/
 npm-debug.log*
 yarn-debug.log*
