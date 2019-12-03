@@ -21,6 +21,8 @@
         </div>
         <van-grid :column-num="3" style="margin-top: 20px;">
             <van-grid-item
+                @click="click(item)"
+                v-if="item.icon != 'fire' || userInfo.userFlag =='admin'"
                 v-for="item in list"
                 :key="item.label"
                 :icon="item.icon"
@@ -84,8 +86,8 @@ export default {
           icon: "chat"
         },
         {
-          label: "",
-          icon: ""
+          label: "砍价",
+          icon: "fire"
         }
       ]
     };
@@ -162,7 +164,14 @@ export default {
             if(new RegExp("("+ k +")").test(fmt))   
         fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
         return fmt;   
-    } 
+    },
+    click(item){
+      if(item.label === '砍价'){
+        this.$router.push({path: 'bargainDev', query: {
+          isAdmin: true
+        }}) 
+      }
+    }
   }
 };
 </script>

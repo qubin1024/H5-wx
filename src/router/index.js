@@ -25,6 +25,11 @@ const routes = [
     component: () => import('../views/activityList.vue')
   },
   {
+    path: '/activitySign',
+    name: 'activitySign',
+    component: () => import('../views/activitySign.vue')
+  },
+  {
     path: '/retrieve',
     name: 'retrieve',
     component: () => import('../views/retrieve.vue')

@@ -2,7 +2,7 @@
   <div class="wrap">
     <music></music>
     <user-center></user-center>
-    <theme-activity></theme-activity>
+    <!-- <theme-activity v-if="!isAdmin"></theme-activity> -->
     <special></special>
     <img src="@/assets/img/bargain-head.jpeg" width="100%" />
     <title-active v-model="metaData.activityName"></title-active>
@@ -137,7 +137,7 @@
         <van-icon name="location" />选择主办方地址
       </div>
       <span style="display: block;font-size: 0.3rem;color: #843493;padding: 0 15px;">{{metaData.address}}</span>
-        <div id="container" style="height: 5rem"></div>
+        <div id="container" style="height: 8rem"></div>
       <div class="x-title" style="text-align: center;">提示：不选择则不显示</div>
     </content-wrap>
     <content-wrap title="信息收集设置">
@@ -239,6 +239,11 @@
       </div>
       <add-file :activeList.sync="metaData.discount"></add-file>
     </content-wrap>
+    <content-wrap title="上传首中尾" v-if="isAdmin">
+        <van-uploader class="round"  v-model="metaData.headImage" @delete="imgDelete('headImage')" :max-count="1" :after-read="afterRead" @click.native="clickItem('headImage')"/>
+        <van-uploader class="round"  v-model="metaData.bgImage" @delete="imgDelete('bgImage')" :max-count="1" :after-read="afterRead" @click.native="clickItem('bgImage')"/>
+        <van-uploader class="round"  v-model="metaData.footImage" @delete="imgDelete('footImage')" :max-count="1" :after-read="afterRead" @click.native="clickItem('footImage')"/>
+    </content-wrap>
     <order-soft></order-soft>
     <div class="footer">
       <van-button
@@ -295,11 +300,11 @@ export default {
         prizeLeft: "",
         latitude: "",
         longitude: "",
-        headImage: "",
+        headImage: [],
         giftName: "",
-        footImage: "",
+        footImage: [],
         total_price: "",
-        bgImage: "",
+        bgImage: [],
         prizeNum: "",
         phone: "",
         question1: "姓名",
@@ -313,6 +318,7 @@ export default {
       itemIndex: '',
       loading: false,
       checked: false,
+      isAdmin: false,
       message: ""
     };
   },
@@ -343,12 +349,18 @@ export default {
     }
   },
   mounted() {
+    if(!!this.$route.query.isAdmin){
+      this.isAdmin = this.$route.query.isAdmin;
+    };
     if(this.$route.query.userVuex && this.bargainData != null){
         let params = Object.assign({}, this.bargainData);
         params.prizeDescription = JSON.parse(params.prizeDescription);
         params.discount = JSON.parse(params.discount);
         params.gift = JSON.parse(params.gift);
         params.thumbnail = JSON.parse(params.thumbnail);
+        params.headImage = JSON.parse(params.headImage);
+        params.bgImage = JSON.parse(params.bgImage);
+        params.footImage = JSON.parse(params.footImage);
         this.metaData = params;
         this.mapInit();
         return;
@@ -441,7 +453,7 @@ export default {
         this.upload(file.file)
     },
     async upload(file) {
-        let form = new metaDataata();
+        let form = new FormData();
         form.append("upfile ", file);
         let config = {
             headers: { "Content-Type": "multipart/form-data" }
@@ -481,12 +493,15 @@ export default {
       params.discount = JSON.stringify(params.discount);
       params.gift = JSON.stringify(params.gift);
       params.thumbnail = JSON.stringify(params.thumbnail);
+      params.headImage = JSON.stringify(params.headImage);
+      params.bgImage = JSON.stringify(params.bgImage);
+      params.footImage = JSON.stringify(params.footImage);
       params.createUser = this.userInfo.userId;
       this.setBargainData(params);
     },
     proview(){
       this.dataFormate()
-      this.$router.push({path: 'bargainPro'})
+      this.$router.push({path: 'bargainPro', query: { isAdmin: this.isAdmin }})
     },
     async save(){
       this.dataFormate();
@@ -494,6 +509,10 @@ export default {
         message: '加载中...',
         duration: 0
       });
+      if(!isAdmin && !this.$route.query.isUpdate){
+        this.bargainData.templateId = this.bargainData.id;
+        this.bargainData.id = "";
+      }
       let {data: res} = await this.$api.common.barginSave(this.bargainData);
       this.$toast.clear();
       if(res.code === "0000"){
@@ -503,6 +522,7 @@ export default {
       }
     },
     async choosePosition(){
+      return;
       let currentUrl = encodeURIComponent(location.href.split("#")[0]);
       let { data: jsRes } = await this.$api.common.initwxjs({
         url: currentUrl

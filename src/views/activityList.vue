@@ -25,8 +25,8 @@
                     <span>{{`已有${!!item.useNum ? item.useNum : 0}次制作`}}</span>
                 </div>
                 <h2>{{item.activityName}}</h2>
-                <van-button round type="default" size="mini">查看示例</van-button>
-                <van-button round type="info" size="mini">开始制作</van-button>
+                <van-button round type="default" size="mini" @click="look(item)">查看示例</van-button>
+                <van-button round type="info" size="mini" @click="make(item)">开始制作</van-button>
             </div>
         </van-list>
         <div class="footer-bar">
@@ -59,6 +59,10 @@ export default {
   data(){
     return {
       bar: [],
+      type: {
+        key: '1分销， 2积赞，3砍价，4拼团，5抽奖',
+
+      },
       loading: false,
       finished: false,
       list: [],
@@ -133,6 +137,21 @@ export default {
     },
     myActive(){
       this.$router.push({path: 'templateList'})
+    },
+    make(item){
+      if(item.activityType == '3'){
+        this.$router.push({path: 'bargainDev', query: {
+          id: item.id
+        }})
+      }
+    },
+    look(item){
+      if(item.activityType == '3'){
+        location.href = location.origin +  "/statics/dist/redirect.html?id=" + item.id + "&hash=bargainPro";
+        // this.$router.push({path: 'bargainPro', query: {
+        //   id: item.id
+        // }})
+      }
     }
   }
 };

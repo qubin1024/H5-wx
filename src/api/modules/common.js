@@ -154,3 +154,55 @@ export function bargin(params){
     data: requestParam(params)
   })
 }
+
+// 查询用户保存的活动
+export function queryActivityByUserId(params){
+  return request({
+    url: requestUrl('api/activity/queryActivityByUserId'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+// 查询报名表
+export function getOrderByActivityId(params){
+  return request({
+    url: requestUrl('api/order/getOrderByActivityId'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+// 查询报名表
+export function sendFlag(params){
+  return request({
+    url: requestUrl('api/order/sendFlag?orderId=' + params.orderId + "&sendFlag=" + params.sendFlag),
+    method: 'get',
+    params: {}
+  })
+}
+
+//复制活动
+export function barginCopy(params){
+  return request({
+    url: requestUrl('bargin/copy'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+//复制活动
+export function barginDelete(params){
+  return request({
+    url: requestUrl('bargin/delete'),
+    method: 'post',
+    data: JSON.stringify(params)
+  })
+}
+//复制活动
+export function orderExport(params){
+  return request({
+    url: requestUrl('api/order/export'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}

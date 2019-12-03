@@ -113,6 +113,12 @@ export default {
     border: 1px dashed #0d1a31;
     border-radius: 5px;
 }
+.time-wrap{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
 div.time-wrap > div {
     height: 1rem;
     display: flex;

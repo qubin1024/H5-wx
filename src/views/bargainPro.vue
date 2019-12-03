@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="wrap" ref="bgimage">
     <music></music>
     <user-center></user-center>
     <special></special>
@@ -9,7 +9,8 @@
           <span> <van-icon name="friends" />12 </span>
           <span> <van-icon name="chat-o" />写评论 </span>
         </div>
-    <img src="@/assets/img/bargain-head.jpeg" width="100%" />
+    <img v-if="metaData.headImage.length" :src="metaData.headImage[0].url" width="100%" />
+    <img v-else src="@/assets/img/bargain-head.jpeg" width="100%" />
     <div class="activity-name">{{metaData.activityName}}</div>
     <content-wrap v-if="!!metaData.startTime && metaData.endTime">
       <count-down class="time-wrap" :startTime="metaData.startTime" :endTime="metaData.endTime"></count-down>
@@ -164,6 +165,10 @@
       </div>
     </content-wrap>
     <order-soft :list="orderList" :floorPrice="metaData.floorPrice"></order-soft>
+
+    <img v-if="metaData.footImage.length" :src="metaData.footImage[0].url" width="100%" />
+
+
     <div class="footer" v-if="!urlParams.id">
       <van-button
         round
@@ -491,7 +496,13 @@ export default {
         params.discount = JSON.parse(params.discount);
         params.gift = JSON.parse(params.gift);
         params.thumbnail = JSON.parse(params.thumbnail);
+        params.headImage = JSON.parse(params.headImage);
+        params.bgImage = JSON.parse(params.bgImage);
+        params.footImage = JSON.parse(params.footImage);
         this.metaData = params;
+        this.$refs["bgimage"].style.background = !this.metaData.bgImage.length
+        ? "#a6141d"
+        : `url(${this.metaData.bgImage[0].url})`;
         return;
       }
       if (!!params.shareId) {
@@ -521,8 +532,14 @@ export default {
           params.discount = JSON.parse(params.discount);
           params.gift = JSON.parse(params.gift);
           params.thumbnail = JSON.parse(params.thumbnail);
+          params.headImage = JSON.parse(params.headImage);
+          params.bgImage = JSON.parse(params.bgImage);
+          params.footImage = JSON.parse(params.footImage);
           this.metaData = params;
           document.title = params.activityName;
+          this.$refs["bgimage"].style.background = !this.metaData.bgImage.length
+          ? "#a6141d"
+          : `url(${this.metaData.bgImage[0].url})`;
 
           let currentUrl = encodeURIComponent(location.href.split("#")[0]);
           let { data: jsRes } = await this.$api.common.initwxjs({
@@ -593,7 +610,7 @@ export default {
       this.show = true;
     },
     goback() {
-      this.$router.push({ path: "bargainDev", query: { userVuex: true } });
+      this.$router.push({ path: "bargainDev", query: { userVuex: true , isAdmin: this.$route.query.isAdmin} });
     },
     //被分享者参加活动
     linkreload() {

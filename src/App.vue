@@ -29,7 +29,7 @@ export default {
     getUserInfo() {
       setTimeout(() => {
         this.userInfo = {};
-      }, 5000);
+      }, 1000);
     }
   }
 };
