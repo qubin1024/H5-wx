@@ -350,7 +350,7 @@ export default {
   },
   mounted() {
     if(!!this.$route.query.isAdmin){
-      this.isAdmin = this.$route.query.isAdmin;
+      this.isAdmin = this.$route.query.isAdmin == 'true' ? true : false;
     };
     if(this.$route.query.userVuex && this.bargainData != null){
         let params = Object.assign({}, this.bargainData);
@@ -509,7 +509,7 @@ export default {
         message: '加载中...',
         duration: 0
       });
-      if(!isAdmin && !this.$route.query.isUpdate){
+      if(!this.isAdmin && !this.$route.query.isUpdate){
         this.bargainData.templateId = this.bargainData.id;
         this.bargainData.id = "";
       }
