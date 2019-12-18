@@ -54,7 +54,7 @@ export default {
       }
     },
     floorPrice: {
-      type: Number
+      type: String
     }
   }
 };

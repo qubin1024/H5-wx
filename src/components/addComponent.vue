@@ -6,7 +6,7 @@
                 <span @click="downData(index)" v-if="index != activeList.length-1">下移</span>
             </div>
                 <van-icon name="clear"  @click="deleteThis(index)" class="delete"/>
-                <van-uploader  v-if="item.type == 'img'"  v-model="item.imgUrl" @delete="imgDelete(item)" :max-count="1" :after-read="afterRead" @click.native="clickItem(index)"/>
+                <img-upload  v-if="item.type == 'img'" :image.sync="item.imgUrl" placeholder="上传图片"></img-upload>
                 <van-field
                     v-if="item.type == 'media'"
                     class="c-textarea"
@@ -62,7 +62,7 @@
 
 <script>
 import VTextarea from "./textarea";
-
+import ImgUpload from "./imgupload.vue";
 export default {
   name: "add-component",
   data() {
@@ -71,7 +71,8 @@ export default {
     };
   },
   components: {
-    VTextarea
+    VTextarea,
+    ImgUpload
   },
   props: {
     activeList: {
@@ -82,15 +83,6 @@ export default {
     }
   },
   methods: {
-    afterRead(file){
-        this.upload(file.file)
-    },
-    clickItem(index){
-        this.itemIndex = index;
-    },
-    imgDelete(item){
-        item.imgUrl = [];
-    },
     async upload(file) {
         let form = new FormData();
         form.append("upfile ", file);
@@ -99,7 +91,7 @@ export default {
         };
         let {data: res} =  await this.$api.common.upload(form)    
         if (res.code == "0000") {
-            this.activeList[this.itemIndex].imgUrl = [{ url: res.result.data }];
+            this.activeList[this.itemIndex].imgUrl = res.result.data;
             this.$emit('update:activeList', this.activeList)
         } else {
             this.$notify({type: "danger", message: res.msg})
@@ -118,7 +110,7 @@ export default {
         link: "",
         des: "",
         text: "",
-        imgUrl: []
+        imgUrl: ''
       });
       this.$emit('update:activeList', this.activeList)
     },

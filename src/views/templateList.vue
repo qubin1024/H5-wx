@@ -8,12 +8,12 @@
                 <div class="icon"><img :src="item.thumbnail"/></div>
                 <div class="cont">
                     <span class="t1"><span style="color: #32b6ea;">[{{item.activityState}}] </span>{{item.activityName}}</span>
-                    <span class="t2">最后跟新时间：{{item.endTime}}</span>
+                    <span class="t2">最后跟新时间：{{item.updateTime || item.startTime}}</span>
                 </div>
             </div> 
             <div class="foot">
               <span @click="link(item)"><van-icon name="points" />报名表</span>  
-              <span><van-icon name="chat" />留言管理</span>  
+              <span @click="commentMgr(item)"><van-icon name="chat"/>留言管理</span>  
               <span @click="edit(item)"><van-icon name="bars" />编辑</span>  
               <span  @click="showMore(item)"><van-icon name="bars" />更多操作</span>  
             </div>   
@@ -42,6 +42,15 @@
                 <span>常见问题</span>
             </div>
         </div>
+        <van-popup 
+          v-model="commentShow"
+          position="bottom"
+          round
+          :style="{ height: '80%' }">
+          <div class="commond-wrap">
+            <comment v-if='commentShow' :id='id' ishide="1"></comment>
+          </div>
+          </van-popup>
         <van-action-sheet
         v-model="show"
         @select="select"
@@ -51,7 +60,8 @@
     </div>    
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex';
+import Comment from "../components/comment";
 export default {
   name: "template-list",
   data() {
@@ -67,7 +77,9 @@ export default {
       itemCache: {},
       activityEntityList: [],
       loading: false,
-      finished: true
+      finished: true,
+      commentShow: false,
+      id: ''
     };
   },
   computed: {
@@ -79,6 +91,10 @@ export default {
     this.queryActivityByUserId('')
   },
   methods: {
+    commentMgr(item){
+      this.id = item.id;
+      this.commentShow = true;
+    },
     showMore(item){
       this.show = true;
       this.itemCache = item;
@@ -150,6 +166,9 @@ export default {
     ...mapGetters('common', {
       userInfo: 'userInfo'
     })
+  },
+  components: {
+    Comment
   }
 };
 </script>
@@ -258,6 +277,9 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+.commond-wrap{
+  height:100%;
 }
 </style>
 

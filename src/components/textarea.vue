@@ -7,7 +7,7 @@
         autosize
         type="textarea"
         maxlength="50"
-        placeholder="请输入留言"
+        placeholder="请输入"
         show-word-limit
     />
 </template>

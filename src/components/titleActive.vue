@@ -25,6 +25,7 @@ export default {
   },
   methods: {
     input(val) {
+      debugger
       this.$emit('input', val)
     }
   }

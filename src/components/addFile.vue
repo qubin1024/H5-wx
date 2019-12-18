@@ -19,6 +19,7 @@
 
 <script>
 import VTextarea from "./textarea";
+import ImgUpload from "./imgupload.vue";
 
 export default {
   name: "add-file",
@@ -27,7 +28,8 @@ export default {
     };
   },
   components: {
-    VTextarea
+    VTextarea,
+    ImgUpload
   },
   props: {
     // type: {

@@ -88,6 +88,10 @@ export default {
         {
           label: "砍价",
           icon: "fire"
+        },
+        {
+          label: "标签",
+          icon: "bookmark"
         }
       ]
     };
@@ -169,7 +173,10 @@ export default {
       if(item.label === '砍价'){
         this.$router.push({path: 'bargainDev', query: {
           isAdmin: true
-        }}) 
+        }})
+      }
+      if(item.label === '标签'){
+        this.$router.push({path: 'addbar'})
       }
     }
   }

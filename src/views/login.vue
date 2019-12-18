@@ -12,7 +12,7 @@
         <div class="flex-wrap">
             <div class="link-phone" @click="linkRegister">注册账号</div>
             <div class="line"></div>
-            <div class="link-phone">联系电话</div>
+            <div class="link-phone" @click="changePassword">修改密码</div>
         </div>
     </div>
 </template>
@@ -38,6 +38,9 @@ export default {
     }),
     linkRegister(){
       this.$router.push({path: 'register'})
+    },
+    changePassword(){
+      this.$router.push({path: "retrieve"})
     },
     async login(){
       if(!!this.username && !!this.password){

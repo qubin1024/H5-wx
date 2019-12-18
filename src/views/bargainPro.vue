@@ -1,15 +1,15 @@
 <template>
   <div class="wrap" ref="bgimage">
-    <music></music>
+    <!-- <music></music> -->
     <user-center></user-center>
     <special></special>
         <div class="user-info">
-          <span> <van-icon name="like" />12 </span>
-          <span> <van-icon name="eye" />12 </span>
-          <span> <van-icon name="friends" />12 </span>
-          <span> <van-icon name="chat-o" />写评论 </span>
+          <span> <van-icon name="like" :class="{'like': !!metaData.likeFlag }" @click="likeClick"/>{{metaData.likeNum}}</span>
+          <span> <van-icon name="eye" />{{metaData.viewNum}}</span>
+          <span> <van-icon name="friends" />{{metaData.shareNum}} </span>
+          <span> <van-icon name="chat-o"  @click="commentShow = true"/>写评论 </span>
         </div>
-    <img v-if="metaData.headImage.length" :src="metaData.headImage[0].url" width="100%" />
+    <img v-if="metaData.headImage" :src="metaData.headImage" width="100%" />
     <img v-else src="@/assets/img/bargain-head.jpeg" width="100%" />
     <div class="activity-name">{{metaData.activityName}}</div>
     <content-wrap v-if="!!metaData.startTime && metaData.endTime">
@@ -75,8 +75,8 @@
       <div v-if="!!metaData.prizeDescription  && metaData.prizeDescription.length">
         <div v-for="item in metaData.prizeDescription" :key="item.key" style="line-height: 0.4rem;">
           <img
-            v-if="item.type == 'img' && !!item.imgUrl.length"
-            :src="item.imgUrl[0].url"
+            v-if="item.type == 'img' && !!item.imgUrl"
+            :src="item.imgUrl"
             style=" width: 100%;display: block;"
           />
           <pre
@@ -166,7 +166,7 @@
     </content-wrap>
     <order-soft :list="orderList" :floorPrice="metaData.floorPrice"></order-soft>
 
-    <img v-if="metaData.footImage.length" :src="metaData.footImage[0].url" width="100%" />
+    <img v-if="metaData.footImage" :src="metaData.footImage" width="100%" />
 
 
     <div class="footer" v-if="!urlParams.id">
@@ -183,7 +183,7 @@
         @click="save"
       >保存活动</van-button>
     </div>
-    <div class="phone">
+    <div class="phone" v-if="metaData.phone">
       <a
         :href="'tel:' + metaData.phone"
         style="font-size: 0.4rem; width: 1rem;
@@ -192,6 +192,17 @@
         line-height: 0.4rem;"
       >联系商家</a>
     </div>
+
+    <van-popup 
+      v-model="commentShow"
+      position="bottom"
+      round
+      :style="{ height: '50%' }">
+      <div class="commond-wrap">
+        <comment v-if='commentShow' :id='urlParams.id'  ispro="1" :user-id="user_id"></comment>
+      </div>
+      </van-popup>
+
     <van-dialog
       v-model="show"
       title="报名信息"
@@ -257,6 +268,7 @@ import ThemeActivity from "../components/theme";
 import Special from "../components/special";
 import CreateTime from "../components/time";
 import CountDown from "../components/count-down";
+import Comment from "../components/comment";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "bargain-pro",
@@ -264,6 +276,7 @@ export default {
     return {
       metaData: {
         id: "",
+        barginNum: "",
         activityName: "", //活动名称
         startTime: "", //开始时间
         endTime: "", //结束时间
@@ -301,7 +314,10 @@ export default {
         question4: "",
         question5: "",
         barginNum: "", //砍价次数
-        address: ""
+        address: "",
+        viewNum: 0,
+        likeFlag: 1,
+        likeNum: 0,
       },
       urlParams: {
         id: null
@@ -319,8 +335,10 @@ export default {
       userName: "",
       name: "",
       shareId: "",
+      like: 0,
       prize: null,
       show: false,
+      commentShow: false,
       barginLogList: []
     };
   },
@@ -457,8 +475,11 @@ export default {
             trigger: function(res) {
               console.log("用户点击发送给朋友");
             },
-            success: function(res) {
-              console.log("已分享");
+            success: (res) => {
+              this.$api.common.updateActivityState({
+                createUser: this.user_id,
+                shareNum: 1
+              });
             },
             cancel: function(res) {
               console.log("已取消");
@@ -472,7 +493,18 @@ export default {
         this.getOrderByOrderId(res.result.order.orderId);
         this.queryBarginLog(this.shareId);
       } else {
-        this.$toast("res.msg");
+        this.$toast(res.msg);
+      }
+    },
+    async likeClick(){
+      let {data: res} = await this.$api.common.updateActivityState({
+        createUser: this.user_id,
+        likeNum: !!this.metaData.likeFlag ? -1 : 1
+      });
+      if(res.code == '0000'){
+        this.metaData.likeFlag = !!this.metaData.likeFlag ? 0 : 1
+      }else{
+        this.$toast(res.msg);
       }
     },
     linkPay() {
@@ -494,11 +526,6 @@ export default {
         let params = Object.assign({}, this.bargainData);
         params.prizeDescription = JSON.parse(params.prizeDescription);
         params.discount = JSON.parse(params.discount);
-        params.gift = JSON.parse(params.gift);
-        params.thumbnail = JSON.parse(params.thumbnail);
-        params.headImage = JSON.parse(params.headImage);
-        params.bgImage = JSON.parse(params.bgImage);
-        params.footImage = JSON.parse(params.footImage);
         this.metaData = params;
         this.$refs["bgimage"].style.background = !this.metaData.bgImage.length
         ? "#a6141d"
@@ -530,16 +557,12 @@ export default {
           this.orderList = infoRes.result.order;
           params.prizeDescription = JSON.parse(params.prizeDescription);
           params.discount = JSON.parse(params.discount);
-          params.gift = JSON.parse(params.gift);
-          params.thumbnail = JSON.parse(params.thumbnail);
-          params.headImage = JSON.parse(params.headImage);
-          params.bgImage = JSON.parse(params.bgImage);
-          params.footImage = JSON.parse(params.footImage);
           this.metaData = params;
+          this.like = params.likeflag;
           document.title = params.activityName;
-          this.$refs["bgimage"].style.background = !this.metaData.bgImage.length
+          this.$refs["bgimage"].style.background = !this.metaData.bgImage
           ? "#a6141d"
-          : `url(${this.metaData.bgImage[0].url})`;
+          : `url(${this.metaData.bgImage})`;
 
           let currentUrl = encodeURIComponent(location.href.split("#")[0]);
           let { data: jsRes } = await this.$api.common.initwxjs({
@@ -592,8 +615,11 @@ export default {
               trigger: function(res) {
                 console.log("用户点击发送给朋友");
               },
-              success: function(res) {
-                console.log("已分享");
+              success: (res) => {
+                this.$api.common.updateActivityState({
+                  createUser: this.user_id,
+                  shareNum: 1
+                });
               },
               cancel: function(res) {
                 console.log("已取消");
@@ -668,11 +694,15 @@ export default {
     ThemeActivity,
     Special,
     CreateTime,
-    CountDown
+    CountDown,
+    Comment
   }
 };
 </script>
 <style lang="scss" scoped>
+.commond-wrap{
+  height: 100%;
+}
 .wrap {
   background: #a6141d;
   padding-bottom: 1.5rem;
@@ -857,6 +887,9 @@ dd.barline div.charts {
     padding: 0 10px;
     width: 5rem;
     justify-content: space-around;
+    .like{
+      color: red;
+    }
 }
 </style>
 

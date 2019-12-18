@@ -206,3 +206,43 @@ export function orderExport(params){
     data: requestParam(params)
   })
 }
+
+//点赞
+ 
+export function updateActivityState(params){
+  return request({
+    url: requestUrl('api/activity/updateActivityState'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//查询评论
+ 
+export function queryCommentByActivityId(params){
+  return request({
+    url: requestUrl('api/activity/queryCommentByActivityId'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//删除评论
+ 
+export function deleteCommentById(params){
+  return request({
+    url: requestUrl('api/activity/deleteCommentById'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//保存评论
+ 
+export function saveComment(params){
+  return request({
+    url: requestUrl('api/activity/saveComment'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
