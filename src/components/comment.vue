@@ -9,7 +9,7 @@
                         <span class="time">【{{item.createTime}}】</span>
                     </div>
                     <div class="commond" style="border-bottom: 1px solid #eaeaea;padding-bottom: 20px;">{{item.comment}}</div>
-                    <div class="feedback" v-if="item.feedbackId.trim()">
+                    <div class="feedback" v-if="item.feedbackId">
                         <span>回复：</span>
                         <div class="commond" style="padding: 11px 0.5rem;">{{item.feedbackComment}}</div>
                         <div class="head">
@@ -94,6 +94,7 @@ export default {
         this.commond = '';
     },
     async commit(){
+        console.log(this.ispro, this.userId)
         if(!this.ispro){
             this.params.comment = commond;
             let {data: res} = await this.$api.common.saveComment(this.params)
@@ -106,7 +107,6 @@ export default {
             let {data: res} = await this.$api.common.saveComment({
                 userId: this.userId,
                 comment: this.commond,
-                toUser: '',
                 activityId: this.id
             })
             if(res.code == '0000'){

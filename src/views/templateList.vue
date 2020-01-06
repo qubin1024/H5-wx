@@ -141,6 +141,12 @@ export default {
       if(item.activityType == '3'){
         this.$router.push({path: "bargainDev", query:{id: item.id, isUpdate: true}})
       }
+      if(item.activityType == '4'){
+        this.$router.push({path: "pingtuanDev", query:{id: item.id, isUpdate: true}})
+      }
+      if(item.activityType == '2'){
+        this.$router.push({path: "jizanDev", query:{id: item.id, isUpdate: true}})
+      }
     },
     makeActive(){
       this.$router.push({path: 'activityList'})

@@ -75,6 +75,26 @@ const routes = [
     component: () => import('../views/mapInit.vue')
   },
   {
+    path: '/jizanDev',
+    name: 'jizanDev',
+    component: () => import('../views/jizanDev.vue')
+  },
+  {
+    path: '/jizanPro',
+    name: 'jizanPro',
+    component: () => import('../views/jizanPro.vue')
+  },
+  {
+    path: '/pingtuanDev',
+    name: 'pingtuanDev',
+    component: () => import('../views/pingtuanDev.vue')
+  },
+  {
+    path: '/pingtuanPro',
+    name: 'pingtuanPro',
+    component: () => import('../views/pingtuanPro.vue')
+  },
+  {
     path: '/',
     nredirect: '/login'
   }

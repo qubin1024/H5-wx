@@ -1,0 +1,142 @@
+
+  
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0,user-scalable=0"
+    />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+    <meta name="format-detection" content="telephone=yes" />
+    <title>支付</title>
+</head>
+<style>
+    .w-r {
+        margin: 0.45rem;
+        border: 0.05rem solid #ccc;
+        border-radius: 10px;
+        background: #f6f6f6;
+        padding: 10px;
+    }
+    .btn-pay {
+        margin: 20px auto 0;
+        width: 90%;
+        height: 40px;
+        font-size: 16px;
+        color: #fff;
+        background: #80d983;
+        border: 1px solid #47d14c;
+        border-radius: 3px;
+        line-height: 40px;
+        text-align: center;
+    }
+    .shuru {
+        position: relative;
+        margin-bottom: 10px;
+    }
+    .shuru span {
+        position: absolute;
+        top: 5px;
+        font-size: 25px;
+    }
+    .shuru div {
+        border: none;
+        width: 100%;
+        height: 50px;
+        font-size: 25px;
+        line-height: 50px;
+        border-bottom: 1px solid #cfcfcf;
+        text-indent: 30px;
+        outline: none;
+        white-space: pre;
+        overflow-x: scroll;
+    }
+    .w-r p {
+        font-size: 14px;
+        color: #8d8d8f;
+    }
+</style>
+
+<body>
+    <div>
+        <div class="w-r">
+            <p>支付金额</p>
+            <div class="shuru">
+                <span id="value"></span>
+                <div id="div"></div>
+            </div>
+            <p>支付问题请咨询相关公司</p>
+        </div>
+        <div class="btn-pay">
+            支付
+        </div>
+    </div>
+</body>
+<script>
+    (function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                docEl.style.fontSize = (clientWidth / 10) + 'px';
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+    (function (global) {
+        global.search = (function (search) {
+            var pairs = search.slice(1).split('&');
+            var result = {};
+            pairs.forEach(function (pair) {
+                if (pair && pair.indexOf('=') !== -1) {
+                    pair = pair.split('=');
+                    //兼容写法
+                    result[pair[0]] = result[
+                        pair[0].toLocaleLowerCase()
+                    ] = decodeURIComponent(pair[1] || '');
+                }
+            });
+            return JSON.parse(JSON.stringify(result));
+        })(location.search);
+    }(window));
+</script>
+<script>
+    var script = document.createElement('script');
+    script.src = "https://res.wx.qq.com/open/js/jweixin-1.2.0.js";
+    document.body.appendChild(script);  
+</script>
+<script>
+    $(document).ready(function () {
+        $('#value').text(search.total_fee);
+        $('.btn-pay').click(function () {
+            $.ajax({
+                url: "https://wxp.sharkmeida.cn/api/wxpay/prepay" + location.search,
+                success: function (res) {
+                    WeixinJSBridge.invoke(
+                        "getBrandWCPayRequest",
+                        {
+                            appId: res.result.appId,
+                            timeStamp: res.result.timestamp,
+                            // 支付签名随机串，不长于 32 位
+                            nonceStr: res.result.nonceStr,
+                            // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+                            package: res.result.package,
+                            // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                            signType: "MD5",
+                            // 支付签名
+                            paySign: res.result.paySign
+                        },
+                        res => {
+                            //支付成功或失败前台判断
+                        });
+                }
+            })
+        })
+    })
+</script>
+
+</html>

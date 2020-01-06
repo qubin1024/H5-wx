@@ -90,6 +90,14 @@ export default {
           icon: "fire"
         },
         {
+          label: "集赞",
+          icon: "fire"
+        },
+        {
+          label: "拼团",
+          icon: "fire"
+        },
+        {
           label: "标签",
           icon: "bookmark"
         }
@@ -172,6 +180,16 @@ export default {
     click(item){
       if(item.label === '砍价'){
         this.$router.push({path: 'bargainDev', query: {
+          isAdmin: true
+        }})
+      }
+      if(item.label === '集赞'){
+        this.$router.push({path: 'jizanDev', query: {
+          isAdmin: true
+        }})
+      }
+      if(item.label === '拼团'){
+        this.$router.push({path: 'pingtuanDev', query: {
           isAdmin: true
         }})
       }

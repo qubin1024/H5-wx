@@ -10,97 +10,54 @@
           <span @click="commentShow = true"> <van-icon name="chat-o" />写评论 </span>
         </div>
     <img v-if="metaData.headImage" :src="metaData.headImage" width="100%" />
-    <img v-else src="@/assets/img/bargain-head.jpeg" width="100%" />
+    <img v-else src="@/assets/img/jizan.jpg" width="100%" />
     <div class="activity-name">{{metaData.activityName}}</div>
     <content-wrap v-if="!!metaData.startTime && metaData.endTime">
       <count-down class="time-wrap" :startTime="metaData.startTime" :endTime="metaData.endTime"></count-down>
     </content-wrap>
     <content-wrap>
-      <dd class="barline" v-if="prize != null">
-        <div
-          w="50"
-          :style="{
-                            'width': parseFloat((metaData.originalPrice-prize) / (metaData.originalPrice - metaData.floorPrice)) * 100 + '%'
-                        }"
-          class="charts"
-        >
-          <img src="../assets/img/yuan.png" />
-          <div class="price">
-            ¥{{prize}}
-            <i></i>
-          </div>
+        <div v-if="!!shareId && b_userId != user_id" @click="linkreload" class="btn animate">参加活动</div>
+        <div v-if="!this.shareId" @click="() => {this.shown = !this.shown}" class="btn animate">参加活动</div>
+        <div v-if="!!this.shareId" @click="addZan" class="btn animate">帮忙集赞</div>
+        <div class="wrap-3">
+            <div v-for="(item, index) in tlist" :key="index">
+                <img :src="item.headimgurl" />
+                <span>{{item.username}}</span>
+            </div>
         </div>
-      </dd>
-      <div class="x-area">
-        <span class="label-item">
-          原价：
-          <span style="color: red;">{{metaData.originalPrice}}元</span>
-        </span>
-        <span class="label-item">
-          底价：
-          <span style="color: red;">{{metaData.floorPrice}}元</span>
-        </span>
-      </div>
-      <div v-if="!!this.shareId" @click="addZan" class="btn animate">帮忙砍价</div>
-      <div v-if="!this.shareId" @click="openDialog" class="btn animate">参加活动</div>
-      <div v-if="!!shareId && b_userId != user_id" @click="linkreload" class="btn animate">参加活动</div>
-      <div v-if="!!this.shareId && b_userId == user_id && metaData.floorPrice == prize" class="btn animate">支付</div>
-      <ul class="wrap-wx" v-if="barginLogList.length">
-        <li v-for="(item, index) in barginLogList" :key="index">
-          <img :src="item.headimgurl" />
-          <div>
-            <p>{{item.username | filterusername(item.username)}}</p>
-            <p>{{item.create_time.split(' ')[0]}}</p>
-          </div>
-          <span>
-            帮砍
-            <span style="color: red;">{{parseInt(item.bargin_price)}}</span>
-          </span>
-        </li>
-      </ul>
+        <span style="font-size: 0.3rem;color: #ccc;">已经有{{tlist.length}}个人帮你点赞</span>
+      
     </content-wrap>
 
-    <content-wrap title="奖品描述">
-      <div style="text-align: center;margin: 0.4rem;">
-        本期奖品
-        <span style="color: red;">{{metaData.prizeNum}} 份</span>， 剩余
-        <span style="color: red;">{{metaData.prizeLeft}} 份</span>
-      </div>
-      <div style="text-align: center;margin: 0.4rem;">
-        <span style="color: red;">{{metaData.giftName}} 商品</span>，原价
-        <span style="color: red;">{{metaData.originalPrice}}元</span>活动亏本卖， 最低降到
-        <span style="color: red;">{{metaData.floorPrice}}元</span>，数量有限，售完即止。
-      </div>
-
-      <div v-if="!!metaData.prizeDescription  && metaData.prizeDescription.length">
-        <div v-for="item in metaData.prizeDescription" :key="item.key" style="line-height: 0.4rem;">
-          <img
-            v-if="item.type == 'img' && !!item.imgUrl"
-            :src="item.imgUrl"
-            style=" width: 100%;display: block;"
-          />
-          <pre
-            v-if="item.type == 'text'"
-            style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
-          >{{item.text}}</pre>
-          <video
-            v-if="item.type == 'media'"
-            :src="item.link"
-            ontrols="controls"
-            preload="meta"
-            width="100%"
-            height="240"
-            x-webkit-airplay="true"
-            webkit-playsinline="true"
-            playsinline="true"
-            x5-video-player-fullscreen="true"
-            x5-video-player-type="h5"
-            controls
-          ></video>
-        </div>
+    <content-wrap v-if="!!metaData.priceDescription  && metaData.priceDescription.length">
+        <div >
+            <div v-for="item in metaData.priceDescription" :key="item.key" style="line-height: 0.4rem;">
+            <img
+                v-if="item.type == 'img' && !!item.imgUrl"
+                :src="item.imgUrl"
+                style=" width: 100%;display: block;"
+            />
+            <pre
+                v-if="item.type == 'text'"
+                style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
+            >{{item.text}}</pre>
+            <video
+                v-if="item.type == 'media'"
+                :src="item.link"
+                ontrols="controls"
+                preload="meta"
+                width="100%"
+                height="240"
+                x-webkit-airplay="true"
+                webkit-playsinline="true"
+                playsinline="true"
+                x5-video-player-fullscreen="true"
+                x5-video-player-type="h5"
+                controls
+            ></video>
+            </div>
       </div>
     </content-wrap>
-
     <content-wrap title="活动规则" v-if="!!metaData.activityRule">
       <pre
         style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
@@ -204,7 +161,7 @@
       </van-popup>
 
     <van-dialog
-      v-model="show"
+      v-model="shown"
       title="报名信息"
       @close="dialogClose"
       @confirm="dialogConfirm"
@@ -271,50 +228,43 @@ import CountDown from "../components/count-down";
 import Comment from "../components/comment";
 import { mapGetters, mapMutations } from "vuex";
 export default {
-  name: "bargain-pro",
+  name: "jizan-pro",
   data() {
     return {
       metaData: {
-        id: "",
-        barginNum: "",
-        activityName: "", //活动名称
-        startTime: "", //开始时间
-        endTime: "", //结束时间
-        originalPrice: "", //原价
-        floorPrice: "", //底价
-        minReduction: "", //最少砍价
-        maxReduction: "", //最多砍价
-        targetNum: "",
-        restrictTime: "", //砍价间隔时间
-        prizeDescription: [], //奖品描述
-        activityRule: "", //活动规则
-        prizeInfo: "", //领奖信息
-        companyDescription: "", //机构介绍
-        companyName: "", //机构名称
-        thumbnail: '', //机构图片
+        id: '',
+        activityName: '',
+        startTime: '',
+        endTime: '',
+        priceNum: '',
+        gift: '',
+        targetNum: '',
+        restrictTime: '',
+        priceDescription: [],
+        activityRule: '',
+        priceInfo: '',
+        companyName: '',
+        companyInfo: [],
+        companyDescription: '',
+        thumbnail: '',
         discount: [],
-        updateUser: "",
-        createTime: "", //创建时间
-        updateTime: "",
-        qrImg: "", //二维码
-        gift: [], //礼物图片
-        prizeLeft: "",
-        latitude: "",
-        longitude: "",
-        headImage: "",
-        giftName: "",
-        footImage: "",
-        total_price: "",
-        bgImage: "",
-        prizeNum: "",
-        phone: "",
-        question1: "",
-        question2: "",
+        updateUser: '',
+        createTime: '',
+        updateTime: '',
+        qrImg: '',
+        prizeLeft: '',
+        latitude: '',
+        longitude: '',
+        headImage:'',
+        footImage:'',
+        bgImage:'',
+        phone: '',
+        address: '',
+        question1: "姓名",
+        question2: "电话",
         question3: "",
         question4: "",
         question5: "",
-        barginNum: "", //砍价次数
-        address: "",
         viewNum: 0,
         likeflag: 1,
         likeNum: 0,
@@ -337,8 +287,9 @@ export default {
       shareId: "",
       like: 0,
       prize: null,
-      show: false,
+      shown: false,
       commentShow: false,
+      tlist: [],
       barginLogList: []
     };
   },
@@ -347,7 +298,7 @@ export default {
   },
   computed: {
     ...mapGetters("common", {
-      bargainData: "bargainData"
+      jizanData: "jizanData"
     })
   },
   watch: {
@@ -373,48 +324,32 @@ export default {
   },
   mounted() {
     this.init();
-    if (!!this.$route.query.shareId) {
-      this.getOrderByOrderId(this.$route.query.shareId);
-      this.queryBarginLog(this.$route.query.shareId);
-    }
   },
   methods: {
-    async getOrderByOrderId(shareId) {
-      let { data: res } = await this.$api.common.getOrderByOrderId({
-        orderId: shareId
-      });
-      if (res.code == "0000") {
-        this.prize = parseInt(res.result.data.total_price);
-        this.b_userId = res.result.data.user_id;
-      }
+    async gatherLike(params){
+      let {data: res} = await this.$api.common.gatherLike(params)
+      if (res.code == '0000') {
+            this.$toast(`恭喜你点赞成功！`);
+            let {data: res2} = await this.$api.common.queryLikeLog({
+              id: this.shareId
+            });
+            if (res2.code == "0000") {
+              this.tlist = res2.result.data;
+            }
+          } else {
+            this.$toast(res.msg);
+          }
     },
-    async queryBarginLog(shareId) {
-      let { data: barginLog } = await this.$api.common.queryBarginLog({
-        orderId: shareId
-      });
-      if (barginLog.code == "0000") {
-        this.barginLogList = barginLog.result.data;
-      }
-    },
-    async addZan() {
+    addZan() {
       if (!this.shareId) {
         // 显示文字
         return this.$toast("请参加活动！");
       }
-
-      let { data: res } = await this.$api.common.bargin({
-        activityId: this.urlParams.id,
-        orderId: this.shareId,
-        total_price: this.prize,
-        user_id: this.user_id
-      });
-      if (res.code == "0000") {
-        this.$toast(`恭喜你成功砍价${res.result.data.total_price}元`);
-        this.getOrderByOrderId(this.shareId);
-        this.queryBarginLog(this.shareId);
-      } else {
-        this.$toast(res.msg);
-      }
+      this.gatherLike({
+          activityId: this.urlParams.id,
+          id: this.shareId,
+          likes: this.user_id
+        })
     },
     dialogClose() {
       this.dialogInfo = {
@@ -431,29 +366,20 @@ export default {
         return this.$notify({ type: "danger", message: "请填写姓名，电话!" });
       }
 
-      let { data: res } = await this.$api.common.saveOrder(
-        Object.assign(
-          {},
+      let { data: res } = await this.$api.common.jizanMakeLike(
           {
             activityId: this.urlParams.id,
-            from_user: "",
-            red_packets: "",
-            total_price: this.metaData.originalPrice,
-            user_name: "",
-            orderType: "3",
-            user_type: "",
-            mobile: "",
-            user_id: this.user_id,
-            question3: "",
-            question4: "",
-            question5: ""
-          },
-          this.dialogInfo
-        )
+            userId: this.user_id,
+            prizeNum: this.metaData.targetNum.toString(),
+            mobile: this.dialogInfo.mobile,
+            userName: this.dialogInfo.user_name,
+            prizeTime: this.metaData.restrictTime
+          }
       );
       if (res.code == "0000") {
-        this.$toast("参加成功！分享好友帮砍价，赢礼品。");
-        this.shareId = res.result.order.orderId;
+        this.$toast("参加成功！分享好友集赞获爱心，赢礼品。");
+        this.shown = false;
+        this.shareId = res.result.data.id;
         wx.ready(() => {
           var shareParam = {
             title: `我是${this.dialogInfo.user_name || this.userName}, 参加了${
@@ -491,8 +417,7 @@ export default {
           wx.onMenuShareAppMessage(shareParam);
           this.show = false;
         });
-        this.getOrderByOrderId(res.result.order.orderId);
-        this.queryBarginLog(this.shareId);
+        this.queryPrizeLog(this.shareId);
       } else {
         this.$toast(res.msg);
       }
@@ -511,6 +436,14 @@ export default {
         this.$toast(res.msg);
       }
     },
+    async queryPrizeLog(shareId){
+      let {data: res} = await this.$api.common.queryPrizeLog({
+        id: this.shareId
+      })
+      if (res.code == "0000") {
+        this.b_userId = res.result.data.user_id;
+      }
+    },
     linkPay() {
       if (!this.shareId || !this.prize) {
         return this.$toast("订单不存在或者金额异常");
@@ -527,8 +460,9 @@ export default {
       let params = this.$route.query;
       this.urlParams = params;
       if (!params.id) {
-        let params = Object.assign({}, this.bargainData);
-        params.prizeDescription = JSON.parse(params.prizeDescription);
+        let params = Object.assign({}, this.jizanData);
+        params.companyInfo = JSON.parse(params.companyInfo);
+        params.priceDescription = JSON.parse(params.priceDescription);
         params.discount = JSON.parse(params.discount);
         this.metaData = params;
         this.$refs["bgimage"].style.background = !this.metaData.bgImage.length
@@ -538,6 +472,7 @@ export default {
       }
       if (!!params.shareId) {
         this.shareId = params.shareId;
+        this.queryPrizeLog(this.shareId);
       }
       if (!!params.shown) {
         this.shown = !!params.shown ? true : false;
@@ -552,14 +487,15 @@ export default {
           this.userName =
             res.result.data.user.username || res.result.data.user.nickname;
         }
-        let { data: infoRes } = await this.$api.common.barginInfo({
+        let { data: infoRes } = await this.$api.common.jizanInfo({
           type: "info",
           id: params.id
         });
         if (infoRes.code === "0000") {
-          let params = infoRes.result.bargin;
+          let params = infoRes.result.gather;
           this.orderList = infoRes.result.order;
-          params.prizeDescription = JSON.parse(params.prizeDescription);
+          params.companyInfo = JSON.parse(params.companyInfo);
+          params.priceDescription = JSON.parse(params.priceDescription);
           params.discount = JSON.parse(params.discount);
           this.metaData = params;
           document.title = params.activityName;
@@ -597,7 +533,7 @@ export default {
                 self.user_id +
                 "&shareId=" +
                 self.shareId +
-                "&hash=bargainPro", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                "&hash=jizanPro", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
               imgUrl: self.metaData.thumbnail, // 分享图标
               // type: 'link', // 分享类型,music、video或link，不填默认为link
               // dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -626,7 +562,7 @@ export default {
       this.show = true;
     },
     goback() {
-      this.$router.push({ path: "bargainDev", query: { userVuex: true , isAdmin: this.$route.query.isAdmin} });
+      this.$router.push({ path: "jizanDev", query: { userVuex: true , isAdmin: this.$route.query.isAdmin} });
     },
     //被分享者参加活动
     linkreload() {
@@ -635,7 +571,7 @@ export default {
         "statics/dist/redirect.html" +
         "?id=" +
         this.urlParams.id +
-        "&hash=bargainPro&shown=1";
+        "&hash=jizanPro&shown=1";
     },
     //地图初始化
     initQQMap() {
@@ -662,7 +598,7 @@ export default {
         message: "加载中...",
         duration: 0
       });
-      let { data: res } = await this.$api.common.barginSave(this.bargainData);
+      let { data: res } = await this.$api.common.jizanSave(this.jizanData);
       this.$toast.clear();
       if (res.code === "0000") {
         this.$notify({ type: "success", message: "保存成功！" });
@@ -694,7 +630,7 @@ export default {
   height: 100%;
 }
 .wrap {
-  background: #a6141d;
+  background: #010b27;
   padding-bottom: 1.5rem;
 }
 .footer {
@@ -880,6 +816,29 @@ dd.barline div.charts {
     .like{
       color: red;
     }
+}
+.wrap-3 {
+  display: flex;
+  padding: 0.5rem;
+  overflow: auto;
+  justify-content: flex-start;
+  border-top: 1px solid #ccc;
+  background: #fff;
+  flex-wrap: wrap;
+}
+.wrap-3 > div {
+  display: flex;
+  width: 1rem;
+  height: 1.7rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.2rem;
+}
+.wrap-3 img {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
 }
 </style>
 

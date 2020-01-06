@@ -5,99 +5,55 @@
       <user-center></user-center>
       <!-- <theme-activity v-if="!isAdmin"></theme-activity> -->
       <special></special>
-      <img src="@/assets/img/bargain-head.jpeg" width="100%" />
-      <title-active v-model="metaData.activityName"></title-active>
+      <img src="@/assets/img/jizan.jpg" width="100%" />
+      <title-active v-model="metaData.activityName" placeholder="快来集爱心，免费赢取**培训一个月的舞蹈课程"></title-active>
       <content-wrap>
         <create-time :startTime.sync="metaData.startTime" :endTime.sync="metaData.endTime"></create-time>
       </content-wrap>
-      <content-wrap>
+      <content-wrap title="奖品信息">
         <div class="center">
-          <img-upload :image.sync="metaData.gift"></img-upload>
+            <span class="label-item">
+                本期奖品:
+                <van-field class="v-input"  v-model="metaData.priceNum"/>
+                <span>份</span>
+            </span>
         </div>
-        <div class="x-area">
-          <span class="label-item">
-            原价：
-            <van-field class="v-input"  v-model="metaData.originalPrice"/>
-            <span style="color: red;">元</span>
-          </span>
-          <span class="label-item">
-            底价：
-            <van-field class="v-input" v-model="metaData.floorPrice"/>
-            <span style="color: red;">元</span>
-          </span>
-        </div>
-        <div class="x-title">每次减价减少范围</div>
+        <div class="x-title" style="text-align: center;">(如有用户报名，奖品数量可增不可减，谨慎填写)</div>
         <div class="x-area" style="margin: 10px 0;">
           <span class="label-item">
-            最少：
-            <van-field class="v-input" v-model="metaData.minReduction"/>
-            <span style="color: red;">元</span>
-          </span>
-          <span class="label-item">
-            最多：
-            <van-field class="v-input" v-model="metaData.maxReduction"/>
-            <span style="color: red;">元</span>
+            本活动集到
+            <van-field class="v-input"  v-model="metaData.targetNum"/>
+            <span style="color: red;">个爱心</span>即可<br/>
           </span>
         </div>
-        <div
-          class="x-title"
-          style="text-align: center;"
-        >参考公式：（原价-底价）➗ 大致帮减人数=帮减范围平均数，帮减范围平均数-5=最小值，帮减范围平均数+5=最大值。建议设置30-40人帮减即可减至底价</div>
+        <van-field class="v-input" style="width: 6rem; margin: 0 1rem;"  v-model="metaData.gift" placeholder="赢取**礼物一份"/>
+        <div class="x-title" style="text-align: center;">(如有用户报名，奖品数量可增不可减，谨慎填写)</div>
         <div class="x-area" style="margin: 10px 0;">
           <span class="label-item">
             报名者每隔
             <van-field class="v-input"  v-model="metaData.restrictTime"/>
-            <span style="color: red;">小时</span>可再次给自己减价
+            <span style="color: red;">小时</span>可再次给自己助力
           </span>
         </div>
         <div class="x-title" style="text-align: center;">每个报名者可在活动时间内多次自己减价，帮忙者仅有一次机会；如有用户报名，此时间可减不可增</div>
-        <!-- <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            活动首页显示需要多少人帮忙获得奖品
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div> -->
+        <add-component :activeList.sync="metaData.priceDescription"></add-component>
       </content-wrap>
-      <content-wrap title="奖品描述">
-        <div class="x-area" style="margin: 10px 0;justify-content: center;">
-          <span class="label-item">
-            本期奖品
-            <van-field class="v-input" v-model="metaData.giftName"/>
-          </span>
-
-          <span class="label-item">
-            奖品数量
-            <van-field class="v-input" v-model="metaData.prizeNum"/>
-          </span>
-        </div>
-        <div class="x-title" style="text-align: center;">如有用户报名，奖品数量可增不可减，谨慎填写</div>
-        <add-component :activeList.sync="metaData.prizeDescription"></add-component>
+      <content-wrap title="活动规则">
+        <v-textarea v-model="metaData.activityRule"></v-textarea>
+      </content-wrap>
+      <content-wrap title="领奖信息">
+        <v-textarea v-model="metaData.prizeInfo"></v-textarea>
+      </content-wrap>
+      <content-wrap title="机构介绍">
+        <add-component :activeList.sync="metaData.companyInfo"></add-component>
       </content-wrap>
       <content-wrap title="主办方名片">
         <div class="x-title" style="text-align: center;">
           <van-icon name="warning" />完善的主办方信息可以让用户更全方位地了解主办方，可以很好的提高活动效果
         </div>
-        <!-- <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            显示/隐藏 主办方名片
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div> -->
-        <!-- <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            显示/隐藏 活动主页顶部logo
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div> -->
         <div class="title-23">
           <span style="color: #10aeff;background: #fff;padding: 0 10px;">基本信息</span>
         </div>
-        <!-- <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            显示/隐藏 基本信息
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span> 
-        </div> -->
         <div class="x-area" style="margin: 10px 0;">
           <img-upload class="round" :image.sync="metaData.thumbnail" placeholder="上传"></img-upload>
           <div style="width: 200px;">
@@ -202,33 +158,6 @@
           </span>
         </div>
       </content-wrap>
-      <content-wrap title="活动规则">
-        <v-textarea v-model="metaData.activityRule"></v-textarea>
-      </content-wrap>
-      <content-wrap title="领奖信息">
-        <v-textarea v-model="metaData.prizeInfo"></v-textarea>
-      </content-wrap>
-      <!-- <content-wrap title="评论设置">
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            开启语音评论
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            报名后才能评论
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            只显示精华评论
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div>
-        <div class="x-title">温馨提示：如果开启，活动首页评论列表只显示精华评论（可在活动管理=>留言管理下进行移入精华操作；如果关闭，将显示所有评论</div>
-      </content-wrap> -->
       <content-wrap title="店内优惠">
         <div class="x-title">
           <van-icon name="info" />在此填写您的店内优惠或者活动优惠内容
@@ -281,46 +210,42 @@ export default {
   data() {
     return {
       metaData: {
-        id: "",
-        barginNum: "",
-        activityName: "XX机构夏季优惠促销，冰点大放送，帮你爽到底", //活动名称
-        startTime: "", //开始时间
-        endTime: "", //结束时间
-        originalPrice: "", //原价
-        floorPrice: "", //底价
-        minReduction: "", //最少砍价
-        maxReduction: "", //最多砍价
-        targetNum: "",
-        restrictTime: "", //砍价间隔时间
-        prizeDescription: [], //奖品描述
-        activityRule: "", //活动规则
-        prizeInfo: "", //领奖信息
-        companyDescription: "", //机构介绍
-        companyName: "", //机构名称
-        thumbnail: "", //机构图片
+        id: '',
+        activityName: '快来集爱心，免费赢取**培训一个月的舞蹈课程',
+        startTime: '',
+        endTime: '',
+        priceNum: '',
+        gift: '',
+        targetNum: '',
+        restrictTime: '',
+        priceDescription: [],
+        activityRule: '',
+        priceInfo: '',
+        companyName: '',
+        companyInfo: [],
+        companyDescription: '',
+        thumbnail: '',
         discount: [],
-        updateUser: "",
-        createUser: "",
-        createTime: "", //创建时间
-        updateTime: "",
-        qrImg: "", //二维码
-        gift: '', //礼物图片
-        prizeLeft: "",
-        latitude: "",
-        longitude: "",
-        headImage: '',
-        giftName: "",
-        footImage: '',
-        total_price: "",
-        bgImage: '',
-        prizeNum: "",
-        phone: "",
+        updateUser: '',
+        createTime: '',
+        updateTime: '',
+        qrImg: '',
+        prizeLeft: '',
+        latitude: '',
+        longitude: '',
+        headImage:'',
+        footImage:'',
+        bgImage:'',
+        phone: '',
+        address: '',
         question1: "姓名",
         question2: "电话",
         question3: "",
         question4: "",
         question5: "",
-        address: ""
+        viewNum: 0,
+        likeflag: 1,
+        likeNum: 0,
       },
       show: false,
       itemIndex: '',
@@ -336,7 +261,7 @@ export default {
   computed: {
     ...mapGetters("common", {
       userInfo: 'userInfo',
-      bargainData: "bargainData"
+      jizanData: "jizanData"
     })
   },
   watch: {
@@ -354,10 +279,11 @@ export default {
     } else {
       this.isAdmin = this.$route.query.isAdmin
     }
-    if(this.$route.query.userVuex && this.bargainData != null){
-        let params = Object.assign({}, this.bargainData);
-        params.prizeDescription = JSON.parse(params.prizeDescription);
+    if(this.$route.query.userVuex && this.jizanData != null){
+        let params = Object.assign({}, this.jizanData);
+        params.priceDescription = JSON.parse(params.priceDescription);
         params.discount = JSON.parse(params.discount);
+        params.companyInfo = JSON.parse(params.companyInfo);
         this.metaData = params;
         return;
     }
@@ -369,50 +295,29 @@ export default {
   },
   methods: {
     ...mapMutations("common", {
-      setBargainData: "setBargainData"
+      setJizanData: "setJizanData"
     }),
     mapClick(address, lat, log){
       this.metaData.address = address;
       this.metaData.latitude = lat;
       this.metaData.longitude = lng;
     },
-    imgDelete(key){
-        this.metaData[key] = [];
-    },
-    clickItem(index){
-        this.itemIndex = index;
-    },
-    afterRead(file){
-        this.upload(file.file)
-    },
-    async upload(file) {
-        let form = new FormData();
-        form.append("upfile ", file);
-        let config = {
-            headers: { "Content-Type": "multipart/form-data" }
-        };
-        let {data: res} = await this.$api.common.upload(form)    
-        if (res.code == "0000") {
-            this.metaData[this.itemIndex] = [{url: res.result.data}];
-        } else {
-            this.$notify({type: "danger", message: res.msg})
-        }
-    },
     async getInfo(id){
       this.$toast.loading({
         message: '加载中...',
         duration: 0
       });
-      let {data: res} = await this.$api.common.barginInfo({
+      let {data: res} = await this.$api.common.jizanInfo({
         type: "edit",
         id: id
       });
       this.$toast.clear();
 
       if(res.code === "0000"){
-        let params = res.result.bargin;
-        params.prizeDescription = JSON.parse(params.prizeDescription);
+        let params = res.result.gather;
+        params.priceDescription = JSON.parse(params.priceDescription);
         params.discount = JSON.parse(params.discount);
+        params.companyInfo = JSON.parse(params.companyInfo);
         this.metaData = params;
       }else {
          this.$notify({ type: 'danger', message: res.msg });
@@ -420,14 +325,15 @@ export default {
     },
     dataFormate(){
       let params = Object.assign({}, this.metaData);
-      params.prizeDescription = JSON.stringify(params.prizeDescription);
+      params.priceDescription = JSON.stringify(params.priceDescription);
       params.discount = JSON.stringify(params.discount);
+      params.companyInfo = JSON.stringify(params.companyInfo);
       params.createUser = this.userInfo.userId;
-      this.setBargainData(params);
+      this.setJizanData(params);
     },
     proview(){
       this.dataFormate()
-      this.$router.push({path: 'bargainPro', query: { isAdmin: this.isAdmin }})
+      this.$router.push({path: 'jizanPro', query: { isAdmin: this.isAdmin }})
     },
     async save(){
       this.dataFormate();
@@ -436,10 +342,10 @@ export default {
         duration: 0
       });
       if(!this.isAdmin && !this.$route.query.isUpdate){
-        this.bargainData.templateId = this.bargainData.id;
-        this.bargainData.id = "";
+        this.jizanData.templateId = this.jizanData.id;
+        this.jizanData.id = "";
       }
-      let {data: res} = await this.$api.common.barginSave(this.bargainData);
+      let {data: res} = await this.$api.common.jizanSave(this.jizanData);
       this.$toast.clear();
       if(res.code === "0000"){
          this.$notify({ type: 'success', message: "保存成功！" });
@@ -492,7 +398,7 @@ export default {
   background: #fff;
 } 
 .wrap {
-  background: #a6141d;
+  background: #010b27;
   padding-bottom: 1.5rem;
 }
 .footer {
@@ -584,8 +490,8 @@ export default {
   line-height: 1rem;
 }
 .center{
-  width: 3rem;
-  margin: 0 auto;
+    display: flex;
+    justify-content: center;
 }
 .round{
   width: 2rem;

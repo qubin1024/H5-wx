@@ -92,10 +92,78 @@ export function barginSave(params){
     data: requestParam(params)
   })
 }
+
+//集赞保存
+export function jizanSave(params){
+  return request({
+    url: requestUrl('gather/save'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+//集赞参加活动
+export function jizanMakeLike(params){
+  return request({
+    url: requestUrl('gather/makeLike'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+//集赞参加活动
+export function gatherLike(params){
+  return request({
+    url: requestUrl('gather/like'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+export function queryLikeLog(params){
+  return request({
+    url: requestUrl('gather/queryLikeLog'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+
+export function queryPrizeLog(params){
+  return request({
+    url: requestUrl('gather/queryPrizeLog'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+export function grouponSave(params){
+  return request({
+    url: requestUrl('groupon/save'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+
 //砍价详情
 export function barginInfo(params){
   return request({
     url: requestUrl('bargin/info'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//集赞详情
+export function jizanInfo(params){
+  return request({
+    url: requestUrl('gather/info'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//拼团详情
+export function pingtuanInfo(params){
+  return request({
+    url: requestUrl('groupon/info'),
     method: 'post',
     data: requestParam(params)
   })
@@ -242,6 +310,15 @@ export function deleteCommentById(params){
 export function saveComment(params){
   return request({
     url: requestUrl('api/activity/saveComment'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+//groupon/queryGrouponId
+export function queryGrouponId(params){
+  return request({
+    url: requestUrl('groupon/queryGrouponId'),
     method: 'post',
     data: requestParam(params)
   })

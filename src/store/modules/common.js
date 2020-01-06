@@ -1,13 +1,17 @@
 const state = {
   user: null,
   code: null,
-  bargainData: null
+  bargainData: null,
+  jizanData: null,
+  pingtuanData: null
 };
 
 const getters = {
   userInfo: ({ user }) => user,
   code: ({ code }) => code,
-  bargainData: ({ bargainData }) => bargainData
+  bargainData: ({ bargainData }) => bargainData,
+  jizanData: ({ jizanData }) => jizanData,
+  pingtuanData: ({ pingtuanData }) => pingtuanData
 };
 
 const mutations = {
@@ -19,6 +23,12 @@ const mutations = {
   },
   setBargainData: (state, payLoad) => {
     state.bargainData = payLoad;
+  },
+  setJizanData: (state, payLoad) => {
+    state.jizanData = payLoad;
+  },
+  setPingtuanData: (state, payLoad) => {
+    state.pingtuanData = payLoad;
   }
 };
 

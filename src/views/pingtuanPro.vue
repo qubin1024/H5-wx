@@ -10,96 +10,94 @@
           <span @click="commentShow = true"> <van-icon name="chat-o" />写评论 </span>
         </div>
     <img v-if="metaData.headImage" :src="metaData.headImage" width="100%" />
-    <img v-else src="@/assets/img/bargain-head.jpeg" width="100%" />
+    <img v-else src="@/assets/img/pingtuan-head.jpg" width="100%" />
     <div class="activity-name">{{metaData.activityName}}</div>
     <content-wrap v-if="!!metaData.startTime && metaData.endTime">
       <count-down class="time-wrap" :startTime="metaData.startTime" :endTime="metaData.endTime"></count-down>
     </content-wrap>
     <content-wrap>
-      <dd class="barline" v-if="prize != null">
-        <div
-          w="50"
-          :style="{
-                            'width': parseFloat((metaData.originalPrice-prize) / (metaData.originalPrice - metaData.floorPrice)) * 100 + '%'
-                        }"
-          class="charts"
-        >
-          <img src="../assets/img/yuan.png" />
-          <div class="price">
-            ¥{{prize}}
-            <i></i>
+        <div v-if="!!metaData.commodityDescription  && metaData.commodityDescription.length">
+          <div v-for="item in metaData.commodityDescription" :key="item.key" style="line-height: 0.4rem;">
+            <img
+              v-if="item.type == 'img' && !!item.imgUrl"
+              :src="item.imgUrl"
+              style=" width: 100%;display: block;"
+            />
+            <pre
+              v-if="item.type == 'text'"
+              style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
+            >{{item.text}}</pre>
+            <video
+              v-if="item.type == 'media'"
+              :src="item.link"
+              ontrols="controls"
+              preload="meta"
+              width="100%"
+              height="240"
+              x-webkit-airplay="true"
+              webkit-playsinline="true"
+              playsinline="true"
+              x5-video-player-fullscreen="true"
+              x5-video-player-type="h5"
+              controls
+            ></video>
           </div>
         </div>
-      </dd>
-      <div class="x-area">
-        <span class="label-item">
-          原价：
-          <span style="color: red;">{{metaData.originalPrice}}元</span>
-        </span>
-        <span class="label-item">
-          底价：
-          <span style="color: red;">{{metaData.floorPrice}}元</span>
-        </span>
-      </div>
-      <div v-if="!!this.shareId" @click="addZan" class="btn animate">帮忙砍价</div>
-      <div v-if="!this.shareId" @click="openDialog" class="btn animate">参加活动</div>
-      <div v-if="!!shareId && b_userId != user_id" @click="linkreload" class="btn animate">参加活动</div>
-      <div v-if="!!this.shareId && b_userId == user_id && metaData.floorPrice == prize" class="btn animate">支付</div>
-      <ul class="wrap-wx" v-if="barginLogList.length">
-        <li v-for="(item, index) in barginLogList" :key="index">
-          <img :src="item.headimgurl" />
-          <div>
-            <p>{{item.username | filterusername(item.username)}}</p>
-            <p>{{item.create_time.split(' ')[0]}}</p>
-          </div>
-          <span>
-            帮砍
-            <span style="color: red;">{{parseInt(item.bargin_price)}}</span>
-          </span>
-        </li>
-      </ul>
-    </content-wrap>
-
-    <content-wrap title="奖品描述">
-      <div style="text-align: center;margin: 0.4rem;">
-        本期奖品
-        <span style="color: red;">{{metaData.prizeNum}} 份</span>， 剩余
-        <span style="color: red;">{{metaData.prizeLeft}} 份</span>
-      </div>
-      <div style="text-align: center;margin: 0.4rem;">
-        <span style="color: red;">{{metaData.giftName}} 商品</span>，原价
-        <span style="color: red;">{{metaData.originalPrice}}元</span>活动亏本卖， 最低降到
-        <span style="color: red;">{{metaData.floorPrice}}元</span>，数量有限，售完即止。
-      </div>
-
-      <div v-if="!!metaData.prizeDescription  && metaData.prizeDescription.length">
-        <div v-for="item in metaData.prizeDescription" :key="item.key" style="line-height: 0.4rem;">
-          <img
-            v-if="item.type == 'img' && !!item.imgUrl"
-            :src="item.imgUrl"
-            style=" width: 100%;display: block;"
-          />
-          <pre
-            v-if="item.type == 'text'"
-            style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
-          >{{item.text}}</pre>
-          <video
-            v-if="item.type == 'media'"
-            :src="item.link"
-            ontrols="controls"
-            preload="meta"
-            width="100%"
-            height="240"
-            x-webkit-airplay="true"
-            webkit-playsinline="true"
-            playsinline="true"
-            x5-video-player-fullscreen="true"
-            x5-video-player-type="h5"
-            controls
-          ></video>
+        <div class="t-o">
+            <div>原价：<span style="color: red;">{{metaData.originalPrice}}元</span></div>
         </div>
+        <div v-if="metaData.discount.length">
+            <div class="wrap-tuan" v-for="item in metaData.discount" :key="item.key" style="line-height: 0.4rem;">
+                <div class="people-wrap">
+                    {{item.num}}人团
+                </div>
+                <div class="prize-wrap">
+                    拼团价：{{item.price}} 元/人
+                </div>
+            </div>
+        </div>
+        <div v-if="!!this.shareId && !this.orderId" @click="() => {this.shown = !this.shown}"  class="btn animate">参加活动</div>
+        <div v-if="!this.shareId" @click="() => {this.shown = !this.shown}" class="btn animate">参加活动</div>
+        <div v-if="!!this.orderId && list.length >= metaData.discount[0].num"  @click="linkPay" class="btn animate">支付</div>
+      <div class="wrap-3">
+          <div v-for="(item, index) in list" :key="index">
+              <img :src="item.headimgurl" />
+              <span>{{item.username}}</span>
+          </div>
       </div>
+      <span style="font-size: 0.3rem;color: #ccc;">已经有{{list.length}}个人参加拼团</span>
     </content-wrap>
+
+    <content-wrap title="领奖信息" v-if="!!metaData.prizeInfo.length">
+      <div v-if="!!metaData.prizeInfo  && metaData.prizeInfo.length">
+          <div v-for="item in metaData.prizeInfo" :key="item.key" style="line-height: 0.4rem;">
+            <img
+              v-if="item.type == 'img' && !!item.imgUrl"
+              :src="item.imgUrl"
+              style=" width: 100%;display: block;"
+            />
+            <pre
+              v-if="item.type == 'text'"
+              style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
+            >{{item.text}}</pre>
+            <video
+              v-if="item.type == 'media'"
+              :src="item.link"
+              ontrols="controls"
+              preload="meta"
+              width="100%"
+              height="240"
+              x-webkit-airplay="true"
+              webkit-playsinline="true"
+              playsinline="true"
+              x5-video-player-fullscreen="true"
+              x5-video-player-type="h5"
+              controls
+            ></video>
+          </div>
+        </div>
+    </content-wrap>
+
 
     <content-wrap title="活动规则" v-if="!!metaData.activityRule">
       <pre
@@ -107,16 +105,34 @@
       >{{metaData.activityRule}}</pre>
     </content-wrap>
 
-    <content-wrap title="领奖信息" v-if="!!metaData.prizeInfo">
-      <pre
-        style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
-      >{{metaData.prizeInfo}}</pre>
-    </content-wrap>
-
-    <content-wrap title="机构介绍" v-if="!!metaData.companyDescription">
-      <pre
-        style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
-      >{{metaData.companyDescription}}</pre>
+    <content-wrap title="机构介绍" v-if="!!metaData.companyInfo.length">
+     <div v-if="!!metaData.companyInfo  && metaData.companyInfo.length">
+          <div v-for="item in metaData.companyInfo" :key="item.key" style="line-height: 0.4rem;">
+            <img
+              v-if="item.type == 'img' && !!item.imgUrl"
+              :src="item.imgUrl"
+              style=" width: 100%;display: block;"
+            />
+            <pre
+              v-if="item.type == 'text'"
+              style="white-space: pre-line;font-size: 0.4rem;padding: 0.2rem 0.4rem;word-wrap: break-word;line-height: 0.6rem;display: inline-block;"
+            >{{item.text}}</pre>
+            <video
+              v-if="item.type == 'media'"
+              :src="item.link"
+              ontrols="controls"
+              preload="meta"
+              width="100%"
+              height="240"
+              x-webkit-airplay="true"
+              webkit-playsinline="true"
+              playsinline="true"
+              x5-video-player-fullscreen="true"
+              x5-video-player-type="h5"
+              controls
+            ></video>
+          </div>
+        </div>
     </content-wrap>
 
     <content-wrap title="主办方名片">
@@ -204,7 +220,7 @@
       </van-popup>
 
     <van-dialog
-      v-model="show"
+      v-model="shown"
       title="报名信息"
       @close="dialogClose"
       @confirm="dialogConfirm"
@@ -271,50 +287,49 @@ import CountDown from "../components/count-down";
 import Comment from "../components/comment";
 import { mapGetters, mapMutations } from "vuex";
 export default {
-  name: "bargain-pro",
+  name: "pingtuan-pro",
   data() {
     return {
       metaData: {
-        id: "",
-        barginNum: "",
-        activityName: "", //活动名称
-        startTime: "", //开始时间
-        endTime: "", //结束时间
-        originalPrice: "", //原价
-        floorPrice: "", //底价
-        minReduction: "", //最少砍价
-        maxReduction: "", //最多砍价
-        targetNum: "",
-        restrictTime: "", //砍价间隔时间
-        prizeDescription: [], //奖品描述
-        activityRule: "", //活动规则
-        prizeInfo: "", //领奖信息
-        companyDescription: "", //机构介绍
-        companyName: "", //机构名称
-        thumbnail: '', //机构图片
+        id: '',
+        activityName: '',
+        startTime: '',
+        endTime: '',
+        originalPrice: '',
+        floorPrice: '',
+        minReduction: '',
+        maxReduction: '',
+        targetNum: '',
+        restrictTime: '',
+        prizeDescription: '',
+        activityRule: '',
+        prizeInfo: [],
+        companyDescription: '',
+        commodityDescription: [],
+        thumbnail: '',
         discount: [],
-        updateUser: "",
-        createTime: "", //创建时间
-        updateTime: "",
-        qrImg: "", //二维码
-        gift: [], //礼物图片
-        prizeLeft: "",
-        latitude: "",
-        longitude: "",
-        headImage: "",
-        giftName: "",
-        footImage: "",
-        total_price: "",
-        bgImage: "",
-        prizeNum: "",
-        phone: "",
-        question1: "",
-        question2: "",
+        updateUser: '',
+        createTime: '',
+        updateTime: '',
+        qrImg: '',
+        gift:'',
+        prizeLeft: '',
+        latitude: '',
+        longitude: '',
+        headImage:'',
+        footImage:'',
+        total_price: '',
+        bgImage:'',
+        prizeNum:'',
+        phone: '',
+        address: '',
+        companyName: '',
+        companyInfo: [],
+        question1: "姓名",
+        question2: "电话",
         question3: "",
         question4: "",
         question5: "",
-        barginNum: "", //砍价次数
-        address: "",
         viewNum: 0,
         likeflag: 1,
         likeNum: 0,
@@ -335,11 +350,12 @@ export default {
       userName: "",
       name: "",
       shareId: "",
+      orderId: null,
       like: 0,
       prize: null,
-      show: false,
+      shown: false,
       commentShow: false,
-      barginLogList: []
+      list: []
     };
   },
   provide: {
@@ -347,13 +363,13 @@ export default {
   },
   computed: {
     ...mapGetters("common", {
-      bargainData: "bargainData"
+      pingtuanData: "pingtuanData"
     })
   },
   watch: {
     metaData: {
       handler: function(newData) {
-        console.log(newData);
+        console.log(  );
       },
       immediate: true,
       deep: true
@@ -373,10 +389,6 @@ export default {
   },
   mounted() {
     this.init();
-    if (!!this.$route.query.shareId) {
-      this.getOrderByOrderId(this.$route.query.shareId);
-      this.queryBarginLog(this.$route.query.shareId);
-    }
   },
   methods: {
     async getOrderByOrderId(shareId) {
@@ -386,36 +398,13 @@ export default {
       if (res.code == "0000") {
         this.prize = parseInt(res.result.data.total_price);
         this.b_userId = res.result.data.user_id;
+        return {
+          prize: parseInt(res.result.data.total_price),
+          b_userId: res.result.data.user_id
+        }
       }
     },
-    async queryBarginLog(shareId) {
-      let { data: barginLog } = await this.$api.common.queryBarginLog({
-        orderId: shareId
-      });
-      if (barginLog.code == "0000") {
-        this.barginLogList = barginLog.result.data;
-      }
-    },
-    async addZan() {
-      if (!this.shareId) {
-        // 显示文字
-        return this.$toast("请参加活动！");
-      }
-
-      let { data: res } = await this.$api.common.bargin({
-        activityId: this.urlParams.id,
-        orderId: this.shareId,
-        total_price: this.prize,
-        user_id: this.user_id
-      });
-      if (res.code == "0000") {
-        this.$toast(`恭喜你成功砍价${res.result.data.total_price}元`);
-        this.getOrderByOrderId(this.shareId);
-        this.queryBarginLog(this.shareId);
-      } else {
-        this.$toast(res.msg);
-      }
-    },
+    
     dialogClose() {
       this.dialogInfo = {
         user_name: "",
@@ -440,7 +429,7 @@ export default {
             red_packets: "",
             total_price: this.metaData.originalPrice,
             user_name: "",
-            orderType: "3",
+            orderType: "4",
             user_type: "",
             mobile: "",
             user_id: this.user_id,
@@ -452,8 +441,9 @@ export default {
         )
       );
       if (res.code == "0000") {
-        this.$toast("参加成功！分享好友帮砍价，赢礼品。");
-        this.shareId = res.result.order.orderId;
+        this.$toast("参加成功！邀请好友，加入拼团 ");
+        this.shareId = res.result.order.groupId;
+        this.orderId = res.result.order.orderId;
         wx.ready(() => {
           var shareParam = {
             title: `我是${this.dialogInfo.user_name || this.userName}, 参加了${
@@ -468,10 +458,8 @@ export default {
               this.user_id +
               "&shareId=" +
               this.shareId +
-              "&hash=bargainPro", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+              "&hash=pingtuanPro", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: this.metaData.thumbnail, // 分享图标
-            // type: 'link', // 分享类型,music、video或link，不填默认为link
-            // dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
             trigger: function(res) {
               console.log("用户点击发送给朋友");
             },
@@ -491,8 +479,7 @@ export default {
           wx.onMenuShareAppMessage(shareParam);
           this.show = false;
         });
-        this.getOrderByOrderId(res.result.order.orderId);
-        this.queryBarginLog(this.shareId);
+        this.queryGrouponId(this.shareId);
       } else {
         this.$toast(res.msg);
       }
@@ -512,33 +499,48 @@ export default {
       }
     },
     linkPay() {
-      if (!this.shareId || !this.prize) {
+      if (!this.shareId) {
         return this.$toast("订单不存在或者金额异常");
       }
-      location.href = location.origin + 
-        "/statics/dist/pay.html?user_id=" +
-        this.b_userId +
-        "&total_fee=" +
-        this.prize +
-        "&orderId=" +
-        this.shareId;
+      this.getOrderByOrderId(this.orderId).then(({prize, b_userId}) => {
+        location.href = location.origin + 
+          "/statics/dist/pay.html?user_id=" +
+          b_userId +
+          "&total_fee=" +
+          prize +
+          "&orderId=" +
+          this.orderId;
+      })
+    },
+    async queryGrouponId(shareId){
+      let {data: res} =  await this.$api.common.queryGrouponId({
+        groupId: shareId
+      })
+      if (res.code == "0000") {
+        this.list = res.result.data;
+        res.result.data.forEach(item => {
+          if (item.user_id == this.user_id) {
+            this.orderId = item.order_id;
+          }
+        });
+      } 
     },
     async init() {
       let params = this.$route.query;
       this.urlParams = params;
       if (!params.id) {
-        let params = Object.assign({}, this.bargainData);
-        params.prizeDescription = JSON.parse(params.prizeDescription);
+        let params = Object.assign({}, this.pingtuanData);
+        params.commodityDescription = JSON.parse(params.commodityDescription);
         params.discount = JSON.parse(params.discount);
+        params.companyInfo = JSON.parse(params.companyInfo);
+        params.prizeInfo = JSON.parse(params.prizeInfo);
         this.metaData = params;
         this.$refs["bgimage"].style.background = !this.metaData.bgImage.length
-        ? "#a6141d"
+        ? "#0b084a"
         : `url(${this.metaData.bgImage[0].url})`;
         return;
       }
-      if (!!params.shareId) {
-        this.shareId = params.shareId;
-      }
+      
       if (!!params.shown) {
         this.shown = !!params.shown ? true : false;
       }
@@ -547,24 +549,30 @@ export default {
           code: params.code,
           state: params.state
         });
+        if (!!params.shareId) {
+          this.shareId = params.shareId;
+          this.queryGrouponId(this.shareId);
+        }
         if (res.code == "0000") {
           this.user_id = res.result.data.user.userId;
           this.userName =
             res.result.data.user.username || res.result.data.user.nickname;
         }
-        let { data: infoRes } = await this.$api.common.barginInfo({
+        let { data: infoRes } = await this.$api.common.pingtuanInfo({
           type: "info",
           id: params.id
         });
         if (infoRes.code === "0000") {
-          let params = infoRes.result.bargin;
+          let params = infoRes.result.groupon;
           this.orderList = infoRes.result.order;
-          params.prizeDescription = JSON.parse(params.prizeDescription);
+          params.commodityDescription = JSON.parse(params.commodityDescription);
           params.discount = JSON.parse(params.discount);
+          params.companyInfo = JSON.parse(params.companyInfo);
+          params.prizeInfo = JSON.parse(params.prizeInfo);
           this.metaData = params;
           document.title = params.activityName;
           this.$refs["bgimage"].style.background = !this.metaData.bgImage
-          ? "#a6141d"
+          ? "#0b084a"
           : `url(${this.metaData.bgImage})`;
 
           let currentUrl = encodeURIComponent(location.href.split("#")[0]);
@@ -586,7 +594,6 @@ export default {
           });
           var self = this;
           wx.ready(() => {
-            console.log(self)
             var shareParam = {
               title: `我是${self.userName}, 参加了${self.metaData.activityName}`, // 分享标题
               desc: `${self.metaData.activityName}, 联系电话: ${self.metaData.phone}`, // 分享描述
@@ -597,7 +604,7 @@ export default {
                 self.user_id +
                 "&shareId=" +
                 self.shareId +
-                "&hash=bargainPro", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                "&hash=pingtuanPro", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
               imgUrl: self.metaData.thumbnail, // 分享图标
               // type: 'link', // 分享类型,music、video或link，不填默认为link
               // dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -626,7 +633,7 @@ export default {
       this.show = true;
     },
     goback() {
-      this.$router.push({ path: "bargainDev", query: { userVuex: true , isAdmin: this.$route.query.isAdmin} });
+      this.$router.push({ path: "pingtuanDev", query: { userVuex: true , isAdmin: this.$route.query.isAdmin} });
     },
     //被分享者参加活动
     linkreload() {
@@ -635,7 +642,7 @@ export default {
         "statics/dist/redirect.html" +
         "?id=" +
         this.urlParams.id +
-        "&hash=bargainPro&shown=1";
+        "&hash=pingtuanPro&shown=1";
     },
     //地图初始化
     initQQMap() {
@@ -662,7 +669,7 @@ export default {
         message: "加载中...",
         duration: 0
       });
-      let { data: res } = await this.$api.common.barginSave(this.bargainData);
+      let { data: res } = await this.$api.common.pingtuanSave(this.pingtuanData);
       this.$toast.clear();
       if (res.code === "0000") {
         this.$notify({ type: "success", message: "保存成功！" });
@@ -694,7 +701,7 @@ export default {
   height: 100%;
 }
 .wrap {
-  background: #a6141d;
+  background: #010b27;
   padding-bottom: 1.5rem;
 }
 .footer {
@@ -829,6 +836,54 @@ dd.barline div.charts {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.wrap-tuan {
+  position: relative;
+  margin: 0.2rem auto;
+  height: 2rem;
+  border-radius: 5px;
+  background: #ff5800;
+  padding: 0.1px;
+}
+.people-wrap {
+  width: 3rem;
+  margin: 0.1rem;
+  height: 1.8rem;
+  background: #fff;
+  line-height: 1.8rem;
+  text-align: center;
+  float: left;
+}
+.wrap-3 {
+  display: flex;
+  padding: 0.5rem;
+  overflow: auto;
+  justify-content: flex-start;
+  border-top: 1px solid #ccc;
+  background: #fff;
+  flex-wrap: wrap;
+}
+.wrap-3 > div {
+  display: flex;
+  width: 1rem;
+  height: 1.7rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.2rem;
+}
+.wrap-3 img {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+}
+.prize-wrap {
+  width: 4rem;
+  margin: 0.1rem;
+  height: 1.8rem;
+  line-height: 1.8rem;
+  text-align: center;
+  float: left;
 }
 .wrap-wx p {
   font-size: 0.2rem;

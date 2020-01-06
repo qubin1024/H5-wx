@@ -6,7 +6,7 @@
         rows="2"
         autosize
         type="textarea"
-        placeholder="XX机构夏季优惠促销，冰点大放送，帮你爽到底"
+        :placeholder="placeholder"
         show-word-limit
     />
 </template>
@@ -21,11 +21,14 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    placeholder: {
+      type: String,
+      default: 'XX机构夏季优惠促销，冰点大放送，帮你爽到底'
     }
   },
   methods: {
     input(val) {
-      debugger
       this.$emit('input', val)
     }
   }

@@ -5,99 +5,39 @@
       <user-center></user-center>
       <!-- <theme-activity v-if="!isAdmin"></theme-activity> -->
       <special></special>
-      <img src="@/assets/img/bargain-head.jpeg" width="100%" />
-      <title-active v-model="metaData.activityName"></title-active>
+      <img src="@/assets/img/pingtuan-head.jpg" width="100%" />
+      <title-active v-model="metaData.activityName" placeholder="‘快乐暑假’暑期写作一起拼，成绩一‘夏’提高作文，让成长更精彩"></title-active>
       <content-wrap>
         <create-time :startTime.sync="metaData.startTime" :endTime.sync="metaData.endTime"></create-time>
       </content-wrap>
-      <content-wrap>
-        <div class="center">
-          <img-upload :image.sync="metaData.gift"></img-upload>
+      <content-wrap title="商品描述">
+        <add-component :activeList.sync="metaData.commodityDescription"></add-component>
+        <div>
+            <span class="label-item">
+                原价:
+                <van-field class="v-input" style="width: 4rem;"  v-model="metaData.originalPrice"/>
+                <span style="color: red;">元</span>
+            </span>
         </div>
-        <div class="x-area">
-          <span class="label-item">
-            原价：
-            <van-field class="v-input"  v-model="metaData.originalPrice"/>
-            <span style="color: red;">元</span>
-          </span>
-          <span class="label-item">
-            底价：
-            <van-field class="v-input" v-model="metaData.floorPrice"/>
-            <span style="color: red;">元</span>
-          </span>
-        </div>
-        <div class="x-title">每次减价减少范围</div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item">
-            最少：
-            <van-field class="v-input" v-model="metaData.minReduction"/>
-            <span style="color: red;">元</span>
-          </span>
-          <span class="label-item">
-            最多：
-            <van-field class="v-input" v-model="metaData.maxReduction"/>
-            <span style="color: red;">元</span>
-          </span>
-        </div>
-        <div
-          class="x-title"
-          style="text-align: center;"
-        >参考公式：（原价-底价）➗ 大致帮减人数=帮减范围平均数，帮减范围平均数-5=最小值，帮减范围平均数+5=最大值。建议设置30-40人帮减即可减至底价</div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item">
-            报名者每隔
-            <van-field class="v-input"  v-model="metaData.restrictTime"/>
-            <span style="color: red;">小时</span>可再次给自己减价
-          </span>
-        </div>
-        <div class="x-title" style="text-align: center;">每个报名者可在活动时间内多次自己减价，帮忙者仅有一次机会；如有用户报名，此时间可减不可增</div>
-        <!-- <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            活动首页显示需要多少人帮忙获得奖品
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div> -->
+        <add-tuan :activeList.sync="metaData.discount"></add-tuan>
+        <span style="display: block;font-size: 0.3rem;color: #ccc;padding: 0 15px;">你可以设置多组团，最多设置<span style="color: red;"> 5 </span>组，拼团人数应该逐渐增多，拼团价应该逐渐减小，请认真设置，有人参团后不可修改，建议3人拼团价=原价*30%，5人拼团价=原价*80%，10人拼团价=原价*50%，20人拼团价=原价*30%，40人拼团价=原价*10%。具体要看你发起活动的目标人数和产品的目标价格。</span>
       </content-wrap>
-      <content-wrap title="奖品描述">
-        <div class="x-area" style="margin: 10px 0;justify-content: center;">
-          <span class="label-item">
-            本期奖品
-            <van-field class="v-input" v-model="metaData.giftName"/>
-          </span>
-
-          <span class="label-item">
-            奖品数量
-            <van-field class="v-input" v-model="metaData.prizeNum"/>
-          </span>
-        </div>
-        <div class="x-title" style="text-align: center;">如有用户报名，奖品数量可增不可减，谨慎填写</div>
-        <add-component :activeList.sync="metaData.prizeDescription"></add-component>
+      <content-wrap title="活动规则">
+        <v-textarea v-model="metaData.activityRule"></v-textarea>
+      </content-wrap>
+      <content-wrap title="领取信息">
+        <add-component :activeList.sync="metaData.prizeInfo"></add-component>
+      </content-wrap>
+      <content-wrap title="机构介绍">
+        <add-component :activeList.sync="metaData.companyInfo"></add-component>
       </content-wrap>
       <content-wrap title="主办方名片">
         <div class="x-title" style="text-align: center;">
           <van-icon name="warning" />完善的主办方信息可以让用户更全方位地了解主办方，可以很好的提高活动效果
         </div>
-        <!-- <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            显示/隐藏 主办方名片
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div> -->
-        <!-- <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            显示/隐藏 活动主页顶部logo
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div> -->
         <div class="title-23">
           <span style="color: #10aeff;background: #fff;padding: 0 10px;">基本信息</span>
         </div>
-        <!-- <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            显示/隐藏 基本信息
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span> 
-        </div> -->
         <div class="x-area" style="margin: 10px 0;">
           <img-upload class="round" :image.sync="metaData.thumbnail" placeholder="上传"></img-upload>
           <div style="width: 200px;">
@@ -202,45 +142,6 @@
           </span>
         </div>
       </content-wrap>
-      <content-wrap title="活动规则">
-        <v-textarea v-model="metaData.activityRule"></v-textarea>
-      </content-wrap>
-      <content-wrap title="领奖信息">
-        <v-textarea v-model="metaData.prizeInfo"></v-textarea>
-      </content-wrap>
-      <!-- <content-wrap title="评论设置">
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            开启语音评论
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            报名后才能评论
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item x-title">
-            只显示精华评论
-            <van-switch v-model="checked" active-color="#07c160" inactive-color="#ee0a24" />
-          </span>
-        </div>
-        <div class="x-title">温馨提示：如果开启，活动首页评论列表只显示精华评论（可在活动管理=>留言管理下进行移入精华操作；如果关闭，将显示所有评论</div>
-      </content-wrap> -->
-      <content-wrap title="店内优惠">
-        <div class="x-title">
-          <van-icon name="info" />在此填写您的店内优惠或者活动优惠内容
-        </div>
-        <div class="x-title">
-          <van-icon name="info" />第一条不填写，则不显示
-        </div>
-        <div class="x-title">
-          <van-icon name="info" />最多可设置20条优惠内容
-        </div>
-        <add-file :activeList.sync="metaData.discount"></add-file>
-      </content-wrap>
       <content-wrap title="上传首中尾" v-if="isAdmin">
           <img-upload :image.sync="metaData.headImage" placeholder="上传头部图片"></img-upload>
           <img-upload :image.sync="metaData.bgImage" placeholder="上传背景图片"></img-upload>
@@ -275,52 +176,55 @@ import Special from "../components/special";
 import CreateTime from "../components/time";
 import MapInit from "./mapInit.vue";
 import ImgUpload from "../components/imgupload.vue";
+import AddTuan from "../components/addtuan.vue";
 import { mapGetters, mapMutations } from "vuex";
 export default {
-  name: "bargain-dev",
+  name: "pingtuan-dev",
   data() {
     return {
       metaData: {
-        id: "",
-        barginNum: "",
-        activityName: "XX机构夏季优惠促销，冰点大放送，帮你爽到底", //活动名称
-        startTime: "", //开始时间
-        endTime: "", //结束时间
-        originalPrice: "", //原价
-        floorPrice: "", //底价
-        minReduction: "", //最少砍价
-        maxReduction: "", //最多砍价
-        targetNum: "",
-        restrictTime: "", //砍价间隔时间
-        prizeDescription: [], //奖品描述
-        activityRule: "", //活动规则
-        prizeInfo: "", //领奖信息
-        companyDescription: "", //机构介绍
-        companyName: "", //机构名称
-        thumbnail: "", //机构图片
+        id: '',
+        activityName: '‘快乐暑假’暑期写作一起拼，成绩一‘夏’提高作文，让成长更精彩',
+        startTime: '',
+        endTime: '',
+        originalPrice: '',
+        floorPrice: '',
+        minReduction: '',
+        maxReduction: '',
+        targetNum: '',
+        restrictTime: '',
+        prizeDescription: '',
+        activityRule: '',
+        prizeInfo: [],
+        companyDescription: '',
+        commodityDescription: [],
+        thumbnail: '',
         discount: [],
-        updateUser: "",
-        createUser: "",
-        createTime: "", //创建时间
-        updateTime: "",
-        qrImg: "", //二维码
-        gift: '', //礼物图片
-        prizeLeft: "",
-        latitude: "",
-        longitude: "",
-        headImage: '',
-        giftName: "",
-        footImage: '',
-        total_price: "",
-        bgImage: '',
-        prizeNum: "",
-        phone: "",
+        updateUser: '',
+        createTime: '',
+        updateTime: '',
+        qrImg: '',
+        gift:'',
+        prizeLeft: '',
+        latitude: '',
+        longitude: '',
+        headImage:'',
+        footImage:'',
+        total_price: '',
+        bgImage:'',
+        prizeNum:'',
+        phone: '',
+        address: '',
+        companyName: '',
+        companyInfo: [],
         question1: "姓名",
         question2: "电话",
         question3: "",
         question4: "",
         question5: "",
-        address: ""
+        viewNum: 0,
+        likeflag: 1,
+        likeNum: 0,
       },
       show: false,
       itemIndex: '',
@@ -336,7 +240,7 @@ export default {
   computed: {
     ...mapGetters("common", {
       userInfo: 'userInfo',
-      bargainData: "bargainData"
+      pingtuanData: "pingtuanData"
     })
   },
   watch: {
@@ -354,10 +258,12 @@ export default {
     } else {
       this.isAdmin = this.$route.query.isAdmin
     }
-    if(this.$route.query.userVuex && this.bargainData != null){
-        let params = Object.assign({}, this.bargainData);
-        params.prizeDescription = JSON.parse(params.prizeDescription);
+    if(this.$route.query.userVuex && this.pingtuanData != null){
+        let params = Object.assign({}, this.pingtuanData);
+        params.commodityDescription = JSON.parse(params.commodityDescription);
         params.discount = JSON.parse(params.discount);
+        params.companyInfo = JSON.parse(params.companyInfo);
+        params.prizeInfo = JSON.parse(params.prizeInfo);
         this.metaData = params;
         return;
     }
@@ -369,50 +275,30 @@ export default {
   },
   methods: {
     ...mapMutations("common", {
-      setBargainData: "setBargainData"
+      setPingtuanData: "setPingtuanData"
     }),
     mapClick(address, lat, log){
       this.metaData.address = address;
       this.metaData.latitude = lat;
       this.metaData.longitude = lng;
     },
-    imgDelete(key){
-        this.metaData[key] = [];
-    },
-    clickItem(index){
-        this.itemIndex = index;
-    },
-    afterRead(file){
-        this.upload(file.file)
-    },
-    async upload(file) {
-        let form = new FormData();
-        form.append("upfile ", file);
-        let config = {
-            headers: { "Content-Type": "multipart/form-data" }
-        };
-        let {data: res} = await this.$api.common.upload(form)    
-        if (res.code == "0000") {
-            this.metaData[this.itemIndex] = [{url: res.result.data}];
-        } else {
-            this.$notify({type: "danger", message: res.msg})
-        }
-    },
     async getInfo(id){
       this.$toast.loading({
         message: '加载中...',
         duration: 0
       });
-      let {data: res} = await this.$api.common.barginInfo({
+      let {data: res} = await this.$api.common.pingtuanInfo({
         type: "edit",
         id: id
       });
       this.$toast.clear();
 
       if(res.code === "0000"){
-        let params = res.result.bargin;
-        params.prizeDescription = JSON.parse(params.prizeDescription);
+        let params = res.result.groupon;
+        params.commodityDescription = JSON.parse(params.commodityDescription);
         params.discount = JSON.parse(params.discount);
+        params.companyInfo = JSON.parse(params.companyInfo);
+        params.prizeInfo = JSON.parse(params.prizeInfo);
         this.metaData = params;
       }else {
          this.$notify({ type: 'danger', message: res.msg });
@@ -420,14 +306,23 @@ export default {
     },
     dataFormate(){
       let params = Object.assign({}, this.metaData);
-      params.prizeDescription = JSON.stringify(params.prizeDescription);
+      params.commodityDescription = JSON.stringify(params.commodityDescription);
+      params.discount.sort((a, b) => {
+        if(a.num >= b.num){
+          return true;
+        }else{
+          return false;
+        }
+      })
       params.discount = JSON.stringify(params.discount);
+      params.companyInfo = JSON.stringify(params.companyInfo);
+      params.prizeInfo = JSON.stringify(params.prizeInfo);
       params.createUser = this.userInfo.userId;
-      this.setBargainData(params);
+      this.setPingtuanData(params);
     },
     proview(){
       this.dataFormate()
-      this.$router.push({path: 'bargainPro', query: { isAdmin: this.isAdmin }})
+      this.$router.push({path: 'pingtuanPro', query: { isAdmin: this.isAdmin }})
     },
     async save(){
       this.dataFormate();
@@ -436,10 +331,10 @@ export default {
         duration: 0
       });
       if(!this.isAdmin && !this.$route.query.isUpdate){
-        this.bargainData.templateId = this.bargainData.id;
-        this.bargainData.id = "";
+        this.pingtuanData.templateId = this.pingtuanData.id;
+        this.pingtuanData.id = "";
       }
-      let {data: res} = await this.$api.common.barginSave(this.bargainData);
+      let {data: res} = await this.$api.common.grouponSave(this.pingtuanData);
       this.$toast.clear();
       if(res.code === "0000"){
          this.$notify({ type: 'success', message: "保存成功！" });
@@ -464,7 +359,8 @@ export default {
     Special,
     CreateTime,
     MapInit,
-    ImgUpload
+    ImgUpload,
+    AddTuan
   }
 };
 </script>
@@ -492,7 +388,7 @@ export default {
   background: #fff;
 } 
 .wrap {
-  background: #a6141d;
+  background: #0b084a;
   padding-bottom: 1.5rem;
 }
 .footer {
@@ -584,8 +480,8 @@ export default {
   line-height: 1rem;
 }
 .center{
-  width: 3rem;
-  margin: 0 auto;
+    display: flex;
+    justify-content: center;
 }
 .round{
   width: 2rem;
