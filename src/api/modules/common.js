@@ -101,6 +101,15 @@ export function jizanSave(params){
     data: requestParam(params)
   })
 }
+//抢购保存
+export function distributionSave(params){
+  return request({
+    url: requestUrl('distribution/save'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
 //集赞参加活动
 export function jizanMakeLike(params){
   return request({
@@ -141,6 +150,14 @@ export function grouponSave(params){
   })
 }
 
+//
+export function distributionInfo(params){
+  return request({
+    url: requestUrl('distribution/info/'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
 
 //砍价详情
 export function barginInfo(params){
@@ -319,6 +336,30 @@ export function saveComment(params){
 export function queryGrouponId(params){
   return request({
     url: requestUrl('groupon/queryGrouponId'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+export function getOrderByUserIdAndActivityId(params){
+  return request({
+    url: requestUrl('api/order/getOrderByUserIdAndActivityId'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+export function getOrderByFromUserId(params){
+  return request({
+    url: requestUrl('api/order/getOrderByFromUserId'),
+    method: 'post',
+    data: requestParam(params)
+  })
+}
+
+export function save(params){
+  return request({
+    url: requestUrl('api/order/save'),
     method: 'post',
     data: requestParam(params)
   })

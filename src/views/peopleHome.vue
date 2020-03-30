@@ -98,6 +98,14 @@ export default {
           icon: "fire"
         },
         {
+          label: "助力",
+          icon: "fire"
+        },
+        {
+          label: "抢购",
+          icon: "fire"
+        },
+        {
           label: "标签",
           icon: "bookmark"
         }
@@ -190,6 +198,16 @@ export default {
       }
       if(item.label === '拼团'){
         this.$router.push({path: 'pingtuanDev', query: {
+          isAdmin: true
+        }})
+      }
+      if(item.label === '助力'){
+        this.$router.push({path: 'zhuliDev', query: {
+          isAdmin: true
+        }})
+      }
+      if(item.label === '抢购'){
+        this.$router.push({path: 'qianggouDev', query: {
           isAdmin: true
         }})
       }

@@ -5,98 +5,42 @@
       <user-center></user-center>
       <!-- <theme-activity v-if="!isAdmin"></theme-activity> -->
       <special></special>
-      <img src="@/assets/img/jizan.jpg" width="100%" />
-      <title-active v-model="metaData.activityName" placeholder="快来集爱心，免费赢取**培训一个月的舞蹈课程"></title-active>
+      <img src="@/assets/img/qianggou.jpeg" width="100%" />
+      <title-active v-model="metaData.page1Title"></title-active>
       <content-wrap>
         <create-time :startTime.sync="metaData.startTime" :endTime.sync="metaData.endTime"></create-time>
       </content-wrap>
-      <content-wrap title="奖品信息">
+      <content-wrap>
         <div class="center">
-            <span class="label-item">
-                本期奖品:
-                <van-field class="v-input"  v-model="metaData.priceNum"/>
-                <span>份</span>
-            </span>
+          <img-upload :image.sync="metaData.thumbnail"></img-upload>
         </div>
-        <div class="x-title" style="text-align: center;">(如有用户报名，奖品数量可增不可减，谨慎填写)</div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item">
-            本活动集到
-            <van-field class="v-input"  v-model="metaData.targetNum"/>
-            <span style="color: red;">个爱心</span>即可<br/>
-          </span>
-        </div>
-        <van-field class="v-input" style="width: 6rem; margin: 0 1rem;"  v-model="metaData.gift" placeholder="赢取**礼物一份"/>
-        <div class="x-title" style="text-align: center;">(如有用户报名，奖品数量可增不可减，谨慎填写)</div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item">
-            报名者每隔
-            <van-field class="v-input"  v-model="metaData.restrictTime"/>
-            <span style="color: red;">小时</span>可再次给自己助力
-          </span>
-        </div>
-        <div class="x-title" style="text-align: center;">每个报名者可在活动时间内多次自己减价，帮忙者仅有一次机会；如有用户报名，此时间可减不可增</div>
-        <add-component :activeList.sync="metaData.priceDescription"></add-component>
-      </content-wrap>
-      <content-wrap title="活动规则">
-        <v-textarea v-model="metaData.activityRule"></v-textarea>
-      </content-wrap>
-      <content-wrap title="领奖信息">
-        <v-textarea v-model="metaData.prizeInfo"></v-textarea>
-      </content-wrap>
-      <content-wrap title="机构介绍">
-        <add-component :activeList.sync="metaData.companyInfo"></add-component>
-      </content-wrap>
-      <content-wrap title="主办方名片">
-        <div class="x-title" style="text-align: center;">
-          <van-icon name="warning" />完善的主办方信息可以让用户更全方位地了解主办方，可以很好的提高活动效果
-        </div>
-        <div class="title-23">
-          <span style="color: #10aeff;background: #fff;padding: 0 10px;">基本信息</span>
-        </div>
-        <div class="x-area" style="margin: 10px 0;">
-          <img-upload class="round" :image.sync="metaData.thumbnail" placeholder="上传"></img-upload>
-          <div style="width: 200px;">
-            <van-field
+        <van-field v-model="metaData.activityTheme" label="活动主题" />
+        <van-field v-model="metaData.activityName" label="活动名称" />
+        <van-field v-model="metaData.virtualPopularity" type="number" label="虚拟人气值" />
+        <van-field v-model="metaData.phone" label="电话" />
+        <van-field v-model="metaData.productPrice" label="产品价格" />
+        <van-field v-model="metaData.redEnvelopesName" label="红包名称" />
+        <van-field v-model="metaData.maxValue" type="number" label="红包最大值" />
+        <van-field v-model="metaData.minValue" type="number" label="红包最小值" />
+        <van-field
               class="c-textarea"
-              v-model="metaData.companyName"
+              v-model="metaData.redEnvelopesBlessings"
               rows="1"
               autosize
               type="textarea"
               maxlength="15"
-              placeholder="此处输入主办方名称或品牌名"
+              placeholder="红包祝福语"
               show-word-limit
             />
-            <van-field
-              style="margin-top: 20px;"
-              class="c-textarea"
-              v-model="metaData.companyDescription"
-              rows="1"
-              autosize
-              type="textarea"
-              maxlength="100"
-              placeholder="此处输入主办方简要介绍"
-              show-word-limit
-            />
-          </div>
-        </div>
-        <div class="title-23">
-          <span style="color: #10aeff;background: #fff;padding: 0 10px;">咨询电话</span>
-        </div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item" style="width: 100%;">
-            <van-field class="v-input" v-model="metaData.phone" style="width: 100%;" />
-          </span>
-        </div>
-        <div class="x-title">提示：客户可以通过此电话直接咨询，建议留下手机号保持手机畅通（不留电话则不显示）</div>
-        <div class="title-23">
-          <span style="color: #10aeff;background: #fff;padding: 0 10px;">选择位置</span>
-        </div>
-        <div class="location" @click="choosePosition">
-          <van-icon name="location" />选择主办方地址
-        </div>
-        <span style="display: block;font-size: 0.3rem;color: #843493;padding: 0 15px;">{{metaData.address}}</span>
-        <div class="x-title" style="text-align: center;">提示：不选择则不显示</div>
+      </content-wrap>
+       <content-wrap title="活动规则">
+        <add-component :activeList.sync="metaData.activityRules"></add-component>
+      </content-wrap>
+      <content-wrap title="活动说明">
+        <add-component :activeList.sync="metaData.activityDestription"></add-component>
+      </content-wrap>
+      <content-wrap title="红包规则">
+        <add-component :activeList.sync="metaData.redRules"></add-component>
       </content-wrap>
       <content-wrap title="信息收集设置">
         <div class="x-title">
@@ -158,24 +102,11 @@
           </span>
         </div>
       </content-wrap>
-      <content-wrap title="店内优惠">
-        <div class="x-title">
-          <van-icon name="info" />在此填写您的店内优惠或者活动优惠内容
-        </div>
-        <div class="x-title">
-          <van-icon name="info" />第一条不填写，则不显示
-        </div>
-        <div class="x-title">
-          <van-icon name="info" />最多可设置20条优惠内容
-        </div>
-        <add-file :activeList.sync="metaData.discount"></add-file>
-      </content-wrap>
       <content-wrap title="上传首中尾" v-if="isAdmin">
           <img-upload :image.sync="metaData.headImage" placeholder="上传头部图片"></img-upload>
           <img-upload :image.sync="metaData.bgImage" placeholder="上传背景图片"></img-upload>
           <img-upload :image.sync="metaData.footImage" placeholder="上传底部图片"></img-upload>
       </content-wrap>
-      <order-soft></order-soft>
       <div class="footer" v-if="!show">
         <van-button
           round
@@ -187,7 +118,6 @@
       </div>
       
     </div>
-    <map-init v-if='show' :map-address="metaData.address" :latitude="metaData.latitude" :longitude="metaData.longitude" @mapclick="mapClick"></map-init>
   </div>
 </template>
 <script>
@@ -211,42 +141,55 @@ export default {
     return {
       metaData: {
         id: '',
-        activityName: '快来集爱心，免费赢取**培训一个月的舞蹈课程',
+        templateId: '',
+        page1Title: '默认标题',
+        headImage: '',
+        footImage: '',
+        bgImage: '',
+        focusOnPop: 1,
+        focusOnRed: 1,
+        shareRedEnvelopes: 1,
+        distributionSeries: 0,
+        activityTheme: '',
+        triggerKeywords: '',
+        wechatDescription: '',
+        thumbnail: '',
+        virtualPopularity: 0,
+        music: '',
+        autoPlayMusic: 1,
+        phone: '',
+        targetQuantity: 0,
+        productPrice: '',
+        noPaymentNum: 1,
+        maxValue: 0,
+        minValue: 0,
+        redEnvelopesName: '',
+        redEnvelopesBlessings: '',
+        oneKeyConcern: '',
+        wechatPic: '',
+        templateStyle: '',
+        activityRules: [],
+        redRules: [],
+        activityDestription: [],
+        activityName: '',
+        activityType: '',
         startTime: '',
         endTime: '',
-        priceNum: '',
-        gift: '',
-        targetNum: '',
-        restrictTime: '',
-        priceDescription: [],
-        activityRule: '',
-        priceInfo: '',
-        companyName: '',
-        companyInfo: [],
-        companyDescription: '',
-        thumbnail: '',
-        discount: [],
-        updateUser: '',
-        createTime: '',
-        updateTime: '',
-        qrImg: '',
-        prizeLeft: '',
-        latitude: '',
-        longitude: '',
-        headImage:'',
-        footImage:'',
-        bgImage:'',
-        phone: '',
-        address: '',
+        upUser: '',
+        upTime: '',
+        activityState: '',
+        createUser: '',
         question1: "姓名",
         question2: "电话",
         question3: "",
         question4: "",
         question5: "",
+        address: "",
         viewNum: 0,
         likeflag: 1,
         likeNum: 0,
-      },
+}
+,
       show: false,
       itemIndex: '',
       loading: false,
@@ -261,7 +204,7 @@ export default {
   computed: {
     ...mapGetters("common", {
       userInfo: 'userInfo',
-      jizanData: "jizanData"
+      qianggouData: "qianggouData"
     })
   },
   watch: {
@@ -279,11 +222,11 @@ export default {
     } else {
       this.isAdmin = this.$route.query.isAdmin
     }
-    if(this.$route.query.userVuex && this.jizanData != null){
-        let params = Object.assign({}, this.jizanData);
-        params.priceDescription = JSON.parse(params.priceDescription);
-        params.discount = JSON.parse(params.discount);
-        params.companyInfo = JSON.parse(params.companyInfo);
+    if(this.$route.query.userVuex && this.qianggouData != null){
+        let params = Object.assign({}, this.qianggouData);
+        params.activityRules = JSON.parse(params.activityRules);
+        params.redRules = JSON.parse(params.redRules);
+        params.activityDestription = JSON.parse(params.activityDestription);
         this.metaData = params;
         return;
     }
@@ -295,29 +238,24 @@ export default {
   },
   methods: {
     ...mapMutations("common", {
-      setJizanData: "setJizanData"
+      setQianggouData: "setQianggouData"
     }),
-    mapClick(address, lat, log){
-      this.metaData.address = address;
-      this.metaData.latitude = lat;
-      this.metaData.longitude = lng;
-    },
     async getInfo(id){
       this.$toast.loading({
         message: '加载中...',
         duration: 0
       });
-      let {data: res} = await this.$api.common.jizanInfo({
+      let {data: res} = await this.$api.common.distributionInfo({
         type: "edit",
         id: id
       });
       this.$toast.clear();
 
       if(res.code === "0000"){
-        let params = res.result.gather;
-        params.priceDescription = JSON.parse(params.priceDescription);
-        params.discount = JSON.parse(params.discount);
-        params.companyInfo = JSON.parse(params.companyInfo);
+        let params = res.result.distribution;
+        params.activityRules = JSON.parse(params.activityRules);
+        params.redRules = JSON.parse(params.redRules);
+        params.activityDestription = JSON.parse(params.activityDestription);
         this.metaData = params;
       }else {
          this.$notify({ type: 'danger', message: res.msg });
@@ -325,32 +263,29 @@ export default {
     },
     dataFormate(){
       let params = Object.assign({}, this.metaData);
-      params.priceDescription = JSON.stringify(params.priceDescription);
-      params.discount = JSON.stringify(params.discount);
-      params.companyInfo = JSON.stringify(params.companyInfo);
-      params.createUser = this.userInfo.userId;
-      this.setJizanData(params);
+      params.activityRules = JSON.stringify(params.activityRules);
+      params.redRules = JSON.stringify(params.redRules);
+      params.activityDestription = JSON.stringify(params.activityDestription);
+      //params.createUser = this.userInfo.userId;
+      this.setQianggouData(params);
     },
     proview(){
       this.dataFormate()
-      this.$router.push({path: 'jizanPro', query: { isAdmin: this.isAdmin }})
+      this.$router.push({path: 'qianggouPro', query: { isAdmin: this.isAdmin }})
     },
     async save(){
-      if(!this.jizanData.targetNum){
-        return this.$notify({type: "danger", message: '请填写目标量！'})
-      }
       this.dataFormate();
       this.$toast.loading({
         message: '加载中...',
         duration: 0
       });
       if(!this.isAdmin && !this.$route.query.isUpdate){
-        this.jizanData.templateId = this.jizanData.id;
-        this.jizanData.id = "";
+        this.qianggouData.templateId = this.qianggouData.id;
+        this.qianggouData.id = "";
       }
-      let {data: res} = await this.$api.common.jizanSave(this.jizanData);
+      let {data: res} = await this.$api.common.distributionSave(this.qianggouData);
       this.$toast.clear();
-      if(res.code === "0000"){
+      if(res.code === 0){
          this.$notify({ type: 'success', message: "保存成功！" });
       }else {
          this.$notify({ type: 'danger', message: res.msg });
@@ -401,7 +336,7 @@ export default {
   background: #fff;
 } 
 .wrap {
-  background: #010b27;
+  background: #fe7626;
   padding-bottom: 1.5rem;
 }
 .footer {
@@ -493,8 +428,8 @@ export default {
   line-height: 1rem;
 }
 .center{
-    display: flex;
-    justify-content: center;
+  width: 3rem;
+  margin: 0 auto;
 }
 .round{
   width: 2rem;

@@ -5,7 +5,7 @@
       <user-center></user-center>
       <!-- <theme-activity v-if="!isAdmin"></theme-activity> -->
       <special></special>
-      <img src="@/assets/img/jizan.jpg" width="100%" />
+      <img src="@/assets/img/zhuli.jpg" width="100%" />
       <title-active v-model="metaData.activityName" placeholder="快来集爱心，免费赢取**培训一个月的舞蹈课程"></title-active>
       <content-wrap>
         <create-time :startTime.sync="metaData.startTime" :endTime.sync="metaData.endTime"></create-time>
@@ -19,13 +19,6 @@
             </span>
         </div>
         <div class="x-title" style="text-align: center;">(如有用户报名，奖品数量可增不可减，谨慎填写)</div>
-        <div class="x-area" style="margin: 10px 0;">
-          <span class="label-item">
-            本活动集到
-            <van-field class="v-input"  v-model="metaData.targetNum"/>
-            <span style="color: red;">个爱心</span>即可<br/>
-          </span>
-        </div>
         <van-field class="v-input" style="width: 6rem; margin: 0 1rem;"  v-model="metaData.gift" placeholder="赢取**礼物一份"/>
         <div class="x-title" style="text-align: center;">(如有用户报名，奖品数量可增不可减，谨慎填写)</div>
         <div class="x-area" style="margin: 10px 0;">
@@ -206,7 +199,7 @@ import MapInit from "./mapInit.vue";
 import ImgUpload from "../components/imgupload.vue";
 import { mapGetters, mapMutations } from "vuex";
 export default {
-  name: "bargain-dev",
+  name: "zhuli-dev",
   data() {
     return {
       metaData: {
@@ -216,7 +209,6 @@ export default {
         endTime: '',
         priceNum: '',
         gift: '',
-        targetNum: '',
         restrictTime: '',
         priceDescription: [],
         activityRule: '',
@@ -246,6 +238,7 @@ export default {
         viewNum: 0,
         likeflag: 1,
         likeNum: 0,
+        type: 6
       },
       show: false,
       itemIndex: '',
@@ -261,7 +254,7 @@ export default {
   computed: {
     ...mapGetters("common", {
       userInfo: 'userInfo',
-      jizanData: "jizanData"
+      zhuliData: "zhuliData"
     })
   },
   watch: {
@@ -279,8 +272,8 @@ export default {
     } else {
       this.isAdmin = this.$route.query.isAdmin
     }
-    if(this.$route.query.userVuex && this.jizanData != null){
-        let params = Object.assign({}, this.jizanData);
+    if(this.$route.query.userVuex && this.zhuliData != null){
+        let params = Object.assign({}, this.zhuliData);
         params.priceDescription = JSON.parse(params.priceDescription);
         params.discount = JSON.parse(params.discount);
         params.companyInfo = JSON.parse(params.companyInfo);
@@ -295,7 +288,7 @@ export default {
   },
   methods: {
     ...mapMutations("common", {
-      setJizanData: "setJizanData"
+      setzhuliData: "setzhuliData"
     }),
     mapClick(address, lat, log){
       this.metaData.address = address;
@@ -329,26 +322,23 @@ export default {
       params.discount = JSON.stringify(params.discount);
       params.companyInfo = JSON.stringify(params.companyInfo);
       params.createUser = this.userInfo.userId;
-      this.setJizanData(params);
+      this.setzhuliData(params);
     },
     proview(){
       this.dataFormate()
-      this.$router.push({path: 'jizanPro', query: { isAdmin: this.isAdmin }})
+      this.$router.push({path: 'zhuliPro', query: { isAdmin: this.isAdmin }})
     },
     async save(){
-      if(!this.jizanData.targetNum){
-        return this.$notify({type: "danger", message: '请填写目标量！'})
-      }
       this.dataFormate();
       this.$toast.loading({
         message: '加载中...',
         duration: 0
       });
       if(!this.isAdmin && !this.$route.query.isUpdate){
-        this.jizanData.templateId = this.jizanData.id;
-        this.jizanData.id = "";
+        this.zhuliData.templateId = this.zhuliData.id;
+        this.zhuliData.id = "";
       }
-      let {data: res} = await this.$api.common.jizanSave(this.jizanData);
+      let {data: res} = await this.$api.common.jizanSave(this.zhuliData);
       this.$toast.clear();
       if(res.code === "0000"){
          this.$notify({ type: 'success', message: "保存成功！" });
@@ -401,7 +391,7 @@ export default {
   background: #fff;
 } 
 .wrap {
-  background: #010b27;
+  background: #f18037;
   padding-bottom: 1.5rem;
 }
 .footer {

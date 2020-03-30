@@ -144,13 +144,22 @@ export default {
           id: item.id
         }})
       }
+      if(item.activityType == '4'){
+        this.$router.push({path: "pingtuanDev", query:{id: item.id}})
+      }
+      if(item.activityType == '2'){
+        this.$router.push({path: "jizanDev", query:{id: item.id}})
+      }
     },
     look(item){
       if(item.activityType == '3'){
         location.href = location.origin +  "/statics/dist/redirect.html?id=" + item.id + "&hash=bargainPro";
-        // this.$router.push({path: 'bargainPro', query: {
-        //   id: item.id
-        // }})
+      }
+      if(item.activityType == '4'){
+        location.href = location.origin +  "/statics/dist/redirect.html?id=" + item.id + "&hash=pingtuanPro";
+      }
+      if(item.activityType == '2'){
+        location.href = location.origin +  "/statics/dist/redirect.html?id=" + item.id + "&hash=jizanPro";
       }
     }
   }

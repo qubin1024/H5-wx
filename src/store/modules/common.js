@@ -3,7 +3,9 @@ const state = {
   code: null,
   bargainData: null,
   jizanData: null,
-  pingtuanData: null
+  zhuliData: null,
+  pingtuanData: null,
+  qianggouData: null
 };
 
 const getters = {
@@ -11,7 +13,9 @@ const getters = {
   code: ({ code }) => code,
   bargainData: ({ bargainData }) => bargainData,
   jizanData: ({ jizanData }) => jizanData,
-  pingtuanData: ({ pingtuanData }) => pingtuanData
+  zhuliData: ({zhuliData}) => zhuliData,
+  pingtuanData: ({ pingtuanData }) => pingtuanData,
+  qianggouData: ({ qianggouData }) => qianggouData
 };
 
 const mutations = {
@@ -27,8 +31,14 @@ const mutations = {
   setJizanData: (state, payLoad) => {
     state.jizanData = payLoad;
   },
+  setzhuliData: (state, payLoad) => {
+    state.zhuliData = payLoad;
+  },
   setPingtuanData: (state, payLoad) => {
     state.pingtuanData = payLoad;
+  },
+  setQianggouData: (state, payLoad) => {
+    state.qianggouData = payLoad;
   }
 };
 

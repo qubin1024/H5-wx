@@ -85,9 +85,29 @@ const routes = [
     component: () => import('../views/jizanPro.vue')
   },
   {
+    path: '/zhuliDev',
+    name: 'zhuliDev',
+    component: () => import('../views/zhuliDev.vue')
+  },
+  {
+    path: '/zhuliPro',
+    name: 'zhuliPro',
+    component: () => import('../views/zhuliPro.vue')
+  },
+  {
     path: '/pingtuanDev',
     name: 'pingtuanDev',
     component: () => import('../views/pingtuanDev.vue')
+  },
+  {
+    path: '/qianggouDev',
+    name: 'qianggouDev',
+    component: () => import('../views/qianggouDev.vue')
+  },
+  {
+    path: '/qianggouPro',
+    name: 'qianggouPro',
+    component: () => import('../views/qianggouPro.vue')
   },
   {
     path: '/pingtuanPro',
